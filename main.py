@@ -6,10 +6,11 @@
 import sympy
 #from sympy import sin #or use sympy.sin, so probably want to import * otherwise getting this stuff as input might be weird
 import Newton
+import dimOneAlgs
 import sys
 
-runMap = {'1' : Newton.newtonOptMethod, '2' : Newton.newtonRootMethod }
-methods = { '1' : "Newton's Optimization", '2' : "Newton's Root" }
+runMap = {'1' : Newton.newtonOptMethod, '2' : Newton.newtonRootMethod, '3' : dimOneAlgs.goldenSectionSearch }
+methods = { '1' : "Newton's Optimization", '2' : "Newton's Root", '3' : "Golden Section" }
 
 def selectScreen():
 
@@ -25,27 +26,27 @@ def chooseMethod():
         if (f == None):
             print("Invalid method")
         else:
-            print("Chose", methods[methodNum], "method\n")
-            return f
+            print(f"Chose {methods[methodNum]} method\n")
+            return f, methodNum
 
 def main():
     selectScreen()
 
-    f = chooseMethod()
+    method, methodNum = chooseMethod()
 
     expr = input("Enter an expression. Please use '*' explicitly for all multiplication: ")
     expr = sympy.sympify(expr)
 
-    while True:
-        try:
-            startPoint = int(input("Enter a starting point: "))
-            break
-        except ValueError:
-            print("Invalid input, please enter a valid integer")
+    if (methodNum == '1' or methodNum == '2'):
+        startPoint = Newton.newtonStart()
+        print(f"Expression: {expr} \tStarting Point: {startPoint}")
+        print(f"\nFinal solution: x = {method(expr, startPoint)}")
+    elif (methodNum == '3'):
+        a, b = dimOneAlgs.getRange()
+        print(f"Expression: {expr} \tStarting Interval: [{a}, {b}]")
+        leftBound, rightBound = method(expr, a, b)
+        print(f"\nFinal solution: [{leftBound}, {rightBound}]")
 
-    print("Expression:", expr, "\tStarting Point: ", startPoint)
-
-    print("\nFinal solution:", f(expr, startPoint))
 
 
 
@@ -60,7 +61,7 @@ if __name__ == '__main__':
 # See PyCharm help at https://www.jetbrains.com/help/pycharm/
 
 '''
-todo:
+todo: (NOTE THAT CURRENTLY THE "FINAL SOLUTION" IS THE APPROXIMATION OF THE INPUT VALUE WHERE THE OPTIMAL SOLUTION IS)
 1. main logic and math (input, derivatives, etc)
     - i. derivatives (1st and 2nd) - focus on newton's method as the first one
     - ii. inputting the function so it doesn't have to be hard coded
@@ -73,5 +74,6 @@ todo:
 4. expand to multivariable?? Need to see what functionality python has for that (like template in c++)
 5. polish (this might need implementation with html or smth)
     - i. button for method (real gui), error type, etc
-    - ii.  
+    - ii.  checks for whether initial conditions for method are satisfied
+    
 '''

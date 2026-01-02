@@ -1,7 +1,6 @@
 import sympy
-from sympy import nan
 
-x, y = sympy.symbols('x y')
+x = sympy.symbols('x')
 
 def newtonRootIter(func, point):
 
@@ -12,7 +11,7 @@ def newtonRootIter(func, point):
 def newtonRootMethod(f, x, numIters=10):
     for i in range (numIters):
         x = newtonRootIter(f, x)
-        print(x)
+        #print(x)
     return x
 
 
@@ -34,5 +33,13 @@ def newtonOptMethod(f, x, numIters=10):
         if x == sympy.oo:
             print("failure")
             break
-        print(x)
+        #print(x)
     return x
+
+def newtonStart():
+    while True:
+        try:
+            startPoint = float(input("Enter a starting point: "))
+            return startPoint
+        except ValueError:
+            print("Invalid input, please enter a real number")
