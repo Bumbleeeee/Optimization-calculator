@@ -1,5 +1,6 @@
 # Optimization-calculator
 A calculator for various numerical optimization algorithms
 
-run the following line to install the required packages\n
+run the following line to install the required packages:
+
 pip install -r requirements.txt
