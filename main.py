@@ -7,10 +7,11 @@ import sympy
 #from sympy import sin #or use sympy.sin, so probably want to import * otherwise getting this stuff as input might be weird
 import Newton
 import dimOneAlgs
+import multidimAlgs
 import sys
 
-runMap = {'1' : Newton.newtonOptMethod, '2' : Newton.newtonRootMethod, '3' : dimOneAlgs.goldenSectionSearch }
-methods = { '1' : "Newton's Optimization", '2' : "Newton's Root", '3' : "Golden Section" }
+runMap = {'1' : Newton.newtonOptMethod, '2' : Newton.newtonRootMethod, '3' : dimOneAlgs.goldenSectionSearch, '4' : multidimAlgs.gradientMethod }
+methods = { '1' : "Newton's Optimization", '2' : "Newton's Root", '3' : "Golden Section", '4' : "Gradient Descent" }
 
 def selectScreen():
 
@@ -30,25 +31,47 @@ def chooseMethod():
             return f, methodNum
 
 def main():
+    sympy.init_printing()
+    x = sympy.symbols('x')
     selectScreen()
 
     method, methodNum = chooseMethod()
 
-    expr = input("Enter an expression. Please use '*' explicitly for all multiplication: ")
+    expr = input("Enter an expression. "
+                 "\n- For functions from R to R, use 'x' as the variable. For functions from R^n to R, use 'x_1',...,'x_n' or x, y, z. "
+                 "\n- Please use '*' explicitly for all multiplication.\n")
     expr = sympy.sympify(expr)
 
+    # get number of iterations
+    while True:
+        try:
+            numIters = abs(int(input("Enter number of iterations: ")))
+            break
+        except ValueError:
+            print("Please enter an integer")
+
     if (methodNum == '1' or methodNum == '2'):
+        # 1D algs with starting point
         startPoint = Newton.newtonStart()
         print(f"Expression: {expr} \tStarting Point: {startPoint}")
-        print(f"\nFinal solution: x = {method(expr, startPoint)}")
+        print(f"\nFinal solution: x = {method(expr, startPoint, numIters)}")
+
     elif (methodNum == '3'):
+        # 1D algs with starting interval
         a, b = dimOneAlgs.getRange()
         print(f"Expression: {expr} \tStarting Interval: [{a}, {b}]")
-        leftBound, rightBound = method(expr, a, b)
+        leftBound, rightBound = method(expr, a, b, numIters)
         print(f"\nFinal solution: [{leftBound}, {rightBound}]")
 
+    elif (methodNum == '4'):
+        # multidim algs
+        point = multidimAlgs.getPoint()
 
+        # get step size
+        stepSizeFunc = multidimAlgs.getStepSizeInput()
 
+        print("Final solution:")
+        sympy.pprint(method(expr, sympy.Matrix(point), stepSizeFunc, numIters))
 
     ''' end main function'''
 
