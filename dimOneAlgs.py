@@ -27,10 +27,28 @@ def goldenSectionIter(f, a, b):
     f1 = f.evalf(subs={x: x1})
     f2 = f.evalf(subs={x: x2})
 
-    if (f1 > f2): return x1, b
+    if f1 > f2: return x1, b
     else: return a, x2
 
 def goldenSectionSearch(f, a, b, numIters = 10):
     for i in range(numIters):
         a, b = goldenSectionIter(f, a, b)
+    return a, b
+
+
+def bisectionIter(f, a, b):
+    # works on the assumption that f'(a) < 0, f'(b) > 0
+    midpoint = (a+b) / 2.0
+    dfx = f.diff(x).evalf(subs={x : midpoint })
+    if dfx < 0:
+        return midpoint, b
+    elif dfx > 0:
+        return a, midpoint
+    else:
+        return midpoint, midpoint
+
+def bisectionSearch(f, a, b, numIters = 10):
+    for i in range(numIters):
+        a, b = bisectionIter(f, a, b)
+        if a == b: break
     return a, b

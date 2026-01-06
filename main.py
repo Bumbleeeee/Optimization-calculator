@@ -10,8 +10,10 @@ import dimOneAlgs
 import multidimAlgs
 import sys
 
-runMap = {'1' : Newton.newtonOptMethod, '2' : Newton.newtonRootMethod, '3' : dimOneAlgs.goldenSectionSearch, '4' : multidimAlgs.gradientMethod }
-methods = { '1' : "Newton's Optimization", '2' : "Newton's Root", '3' : "Golden Section", '4' : "Gradient Descent" }
+runMap = {'1' : Newton.newtonOptMethod, '2' : Newton.newtonRootMethod, '3' : dimOneAlgs.goldenSectionSearch,
+          '4' : multidimAlgs.gradientMethod, '5' : dimOneAlgs.bisectionSearch }
+methods = { '1' : "Newton's Optimization", '2' : "Newton's Root", '3' : "Golden Section",
+            '4' : "Gradient Descent", '5' : "Bisection Search" }
 
 def selectScreen():
 
@@ -32,13 +34,13 @@ def chooseMethod():
 
 def main():
     sympy.init_printing()
-    x = sympy.symbols('x')
     selectScreen()
 
     method, methodNum = chooseMethod()
 
     expr = input("Enter an expression. "
-                 "\n- For functions from R to R, use 'x' as the variable. For functions from R^n to R, use 'x_1',...,'x_n' or x, y, z. "
+                 "\n- For functions from R to R, use 'x' as the variable. "
+                 "For functions from R^n to R, use 'x_1',...,'x_n' or x, y, z. "
                  "\n- Please use '*' explicitly for all multiplication.\n")
     expr = sympy.sympify(expr)
 
@@ -56,7 +58,7 @@ def main():
         print(f"Expression: {expr} \tStarting Point: {startPoint}")
         print(f"\nFinal solution: x = {method(expr, startPoint, numIters)}")
 
-    elif (methodNum == '3'):
+    elif (methodNum == '3' or methodNum == '5'):
         # 1D algs with starting interval
         a, b = dimOneAlgs.getRange()
         print(f"Expression: {expr} \tStarting Interval: [{a}, {b}]")
@@ -100,3 +102,13 @@ todo: (NOTE THAT CURRENTLY THE "FINAL SOLUTION" IS THE APPROXIMATION OF THE INPU
     - ii.  checks for whether initial conditions for method are satisfied
     
 '''
+
+#TODO: optimal step size, handle certain constants (pi, e, etc) and irrationals (sqrt2) as inputs
+#TODO: more methods and graph(?)/plot something
+#TODO: can also implement a bisection method for root finding very easily, but maybe not worth it
+#TODO: give final numeric solution for dim one methods? (currently just return an interval)
+#TODO: command to quit at any time - maybe with 'await'
+#TODO: maybe can simplify select conditions with '*' or '**' in functions for unknown number of params? Page 10 of cheat sheet
+
+#TODO: checks for initial conditions such as strict unimodality on the provided interval
+#TODO: methods to find a search interval that satisfies strict unimodality (to guarantee ICs for dim1 algos)
