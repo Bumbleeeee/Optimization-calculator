@@ -11,6 +11,9 @@ x, y, z = sympy.symbols('x y z')
 def findStepSize(func, stepSizeFunc, iterNum):
     if stepSizeFunc == sympy.oo:
         #TODO: optimal step size
+        # phi(a) = f(x - a*f'(x))
+        # will be hard to do a perfectly optimal step size but could do smth like Armijo backtracking algorithm fairly easily
+        # lots of conditions that can be used, page 4 of ch5
         return 0.25
     else:
         return stepSizeFunc.evalf(subs={x : iterNum})
@@ -24,7 +27,7 @@ def gradientIteration(expr, point, iterNum, varList, stepSizeFunc):
 
     gradient = sympy.Matrix([expr]).jacobian(variables).T
     stepSizeNum = findStepSize(expr, stepSizeFunc, iterNum)
-    print(stepSizeNum)
+    #print(stepSizeNum)
     return point - gradient.evalf(subs=subsDict) * stepSizeNum
 
 
