@@ -52,3 +52,31 @@ def bisectionSearch(f, a, b, numIters = 10):
         a, b = bisectionIter(f, a, b)
         if a == b: break
     return a, b
+
+
+def fibonacciIter(f, a, b, rho):
+    a1 = a + rho * (b-a)
+    b1 = a + (1-rho) * (b-a)
+    fa1 = f.evalf(subs={x : a1})
+    fb1 = f.evalf(subs={x : b1})
+
+    if fa1 > fb1:
+        return a1, b
+    else:
+        return a, b1
+
+
+def fibonacciSearch(f, a, b, numIters = 10, epsilon = 0.05):
+    fibNumbers = [1, 1] # fibNumbers[i] = ith fibonacci number
+    for i in range(2, numIters+2):
+        fibNumbers.append(fibNumbers[i-1] + fibNumbers[i-2])
+
+    for i in range(numIters):
+        rho_i = 1 - (fibNumbers[numIters - i] / fibNumbers[numIters - i + 1])
+        if i == numIters - 1:
+            rho_i -= epsilon
+
+        a, b = fibonacciIter(f, a, b, rho_i)
+
+    return a, b
+

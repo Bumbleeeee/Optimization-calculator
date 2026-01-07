@@ -10,10 +10,10 @@ import dimOneAlgs
 import multidimAlgs
 import sys
 
-runMap = {'1' : Newton.newtonOptMethod, '2' : Newton.newtonRootMethod, '3' : dimOneAlgs.goldenSectionSearch,
-          '4' : multidimAlgs.gradientMethod, '5' : dimOneAlgs.bisectionSearch }
-methods = { '1' : "Newton's Optimization", '2' : "Newton's Root", '3' : "Golden Section",
-            '4' : "Gradient Descent", '5' : "Bisection Search" }
+runMap = {'1': Newton.newtonOptMethod, '2': Newton.newtonRootMethod, '3': dimOneAlgs.goldenSectionSearch,
+          '4': multidimAlgs.gradientMethod, '5': dimOneAlgs.bisectionSearch, '6': dimOneAlgs.fibonacciSearch }
+methods = { '1': "Newton's Optimization", '2': "Newton's Root", '3': "Golden Section",
+            '4': "Gradient Descent", '5': "Bisection search", '6': "Fibonacci search" }
 
 def selectScreen():
 
@@ -23,10 +23,10 @@ def selectScreen():
 def chooseMethod():
     while True:
         methodNum = input("Enter which number method to use, or Q to quit: ").strip().upper()
-        if (methodNum == 'Q'):
+        if methodNum == 'Q':
             sys.exit(-1)
         f = runMap.get(methodNum)
-        if (f == None):
+        if f == None:
             print("Invalid method")
         else:
             print(f"Chose {methods[methodNum]} method\n")
@@ -52,20 +52,20 @@ def main():
         except ValueError:
             print("Please enter an integer")
 
-    if (methodNum == '1' or methodNum == '2'):
+    if methodNum == '1' or methodNum == '2':
         # 1D algs with starting point
         startPoint = Newton.newtonStart()
         print(f"Expression: {expr} \tStarting Point: {startPoint}")
         print(f"\nFinal solution: x = {method(expr, startPoint, numIters)}")
 
-    elif (methodNum == '3' or methodNum == '5'):
+    elif methodNum == '3' or methodNum == '5' or methodNum == '6':
         # 1D algs with starting interval
         a, b = dimOneAlgs.getRange()
         print(f"Expression: {expr} \tStarting Interval: [{a}, {b}]")
         leftBound, rightBound = method(expr, a, b, numIters)
-        print(f"\nFinal solution: [{leftBound}, {rightBound}]")
+        print(f"\nFinal interval: [{leftBound}, {rightBound}]")
 
-    elif (methodNum == '4'):
+    elif methodNum == '4':
         # multidim algs
         point = multidimAlgs.getPoint()
 
@@ -102,13 +102,16 @@ todo: (NOTE THAT CURRENTLY THE "FINAL SOLUTION" IS THE APPROXIMATION OF THE INPU
     - ii.  checks for whether initial conditions for method are satisfied
     
 '''
-
+#TODO: more error types
 #TODO: optimal step size, handle certain constants (pi, e, etc) and irrationals (sqrt2) as inputs
 #TODO: more methods and graph(?)/plot something
 #TODO: can also implement a bisection method for root finding very easily, but maybe not worth it
 #TODO: give final numeric solution for dim one methods? (currently just return an interval)
 #TODO: command to quit at any time - maybe with 'await'
 #TODO: maybe can simplify select conditions with '*' or '**' in functions for unknown number of params? Page 10 of cheat sheet
+#TODO: variable epsilon for fib method - could just prompt for it in the function itself, otherwise maybe similar soln to above line
 
 #TODO: checks for initial conditions such as strict unimodality on the provided interval
+#TODO: check if descent condition is satisfied, otherwise alter step size (for nonoptimal step size ofc)
 #TODO: methods to find a search interval that satisfies strict unimodality (to guarantee ICs for dim1 algos)
+#TODO: secant method for when newton's fails (or just to use in general)
