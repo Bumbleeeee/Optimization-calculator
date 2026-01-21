@@ -26,7 +26,7 @@ def chooseMethod():
         if methodNum == 'Q':
             sys.exit(-1)
         f = runMap.get(methodNum)
-        if f == None:
+        if f is None:
             print("Invalid method")
         else:
             print(f"Chose {methods[methodNum]} method\n")
@@ -103,15 +103,24 @@ todo: (NOTE THAT CURRENTLY THE "FINAL SOLUTION" IS THE APPROXIMATION OF THE INPU
     
 '''
 #TODO: more error types
+    # did euclidian dist, need to handle inputting the epsilon where we break AND **** handling args for dif inputs ****
+    #TODO: actually use the end condition function -- need to find a way to use it without checking conditions repeatedly
 #TODO: optimal step size, handle certain constants (pi, e, etc) and irrationals (sqrt2) as inputs
 #TODO: more methods and graph(?)/plot something
 #TODO: can also implement a bisection method for root finding very easily, but maybe not worth it
 #TODO: give final numeric solution for dim one methods? (currently just return an interval)
 #TODO: command to quit at any time - maybe with 'await'
+
 #TODO: maybe can simplify select conditions with '*' or '**' in functions for unknown number of params? Page 10 of cheat sheet
+    # https://realpython.com/python-type-hints-multiple-types/
+    # https://realpython.com/python-kwargs-and-args/#using-the-python-args-variable-in-function-definitions
+
 #TODO: variable epsilon for fib method - could just prompt for it in the function itself, otherwise maybe similar soln to above line
 
 #TODO: checks for initial conditions such as strict unimodality on the provided interval
 #TODO: check if descent condition is satisfied, otherwise alter step size (for nonoptimal step size ofc)
 #TODO: methods to find a search interval that satisfies strict unimodality (to guarantee ICs for dim1 algos)
 #TODO: secant method for when newton's fails (or just to use in general)
+
+
+# 'raise' [exceptiontype] to manually raise exception (instead of just printing failure and exiting)
