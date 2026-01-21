@@ -1,4 +1,6 @@
 import sympy
+import helpers
+
 x, y, z = sympy.symbols('x y z')
 # note the use of point-direction-stepsize so individual iterations should probably handle the step size
 # the method func probably only handles the type
@@ -31,7 +33,7 @@ def gradientIteration(expr, point, iterNum, varList, stepSizeFunc):
     return point - gradient.evalf(subs=subsDict) * stepSizeNum
 
 
-def gradientMethod(expr, point, stepSizeFunc, numIters = 10):
+def gradientMethod(expr, point, stepSizeFunc, numIters = 10, errorType = 'iter'):
     # create enough vars
     x_1 = sympy.symbols('x_1')
     varString = " ".join(f"x_{i+1}" for i in range(point.__len__()))
@@ -43,9 +45,18 @@ def gradientMethod(expr, point, stepSizeFunc, numIters = 10):
         expr = expr.subs(xyzList[i], x_symbols[i])
 
     # run iters
-    for i in range(numIters):
-        point = gradientIteration(expr, point, i+1, x_symbols, stepSizeFunc)
-    return point
+    if errorType == 'iter':
+        for i in range(numIters):
+            point = gradientIteration(expr, point, i+1, x_symbols, stepSizeFunc)
+        return point
+
+    else: #TODO: this is dangerous because it may never converge
+        while True:
+            newPoint = gradientIteration(expr, point, i+1, x_symbols, stepSizeFunc)
+            if helpers.euclidianDistance(point, newPoint) < 0.05:
+                return newPoint
+            else:
+                point = newPoint
 
 
 def getPoint():
