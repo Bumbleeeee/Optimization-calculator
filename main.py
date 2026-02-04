@@ -5,13 +5,13 @@
 
 import sympy
 #from sympy import sin #or use sympy.sin, so probably want to import * otherwise getting this stuff as input might be weird
-import Newton
+import newton
 import dim_one_algs
-import multidimAlgs
+import multidim_algs
 import sys
 
-runMap = {'1': Newton.newton_opt_method, '2': Newton.newton_root_method, '3': dim_one_algs.golden_section_search,
-          '4': multidimAlgs.gradient_method, '5': dim_one_algs.bisection_search, '6': dim_one_algs.fibonacci_search }
+runMap = {'1': newton.newton_opt_method, '2': newton.newton_root_method, '3': dim_one_algs.golden_section_search,
+          '4': multidim_algs.gradient_method, '5': dim_one_algs.bisection_search, '6': dim_one_algs.fibonacci_search }
 methods = { '1': "Newton's Optimization", '2': "Newton's Root", '3': "Golden Section",
             '4': "Gradient Descent", '5': "Bisection search", '6': "Fibonacci search" }
 
@@ -54,7 +54,7 @@ def main():
 
     if method_num == '1' or method_num == '2':
         # 1D algs with starting point
-        start_point = Newton.newton_start()
+        start_point = newton.newton_start()
         print(f"Expression: {expr} \tStarting Point: {start_point}")
         print(f"\nFinal solution: x = {method(expr, start_point, num_iters)}")
 
@@ -67,10 +67,10 @@ def main():
 
     elif method_num == '4':
         # multidim algs
-        point = multidimAlgs.get_point()
+        point = multidim_algs.get_point()
 
         # get step size
-        step_size_func = multidimAlgs.get_step_size_input()
+        step_size_func = multidim_algs.get_step_size_input()
 
         print("Final solution:")
         sympy.pprint(method(expr, sympy.Matrix(point), step_size_func, num_iters))

@@ -7,7 +7,7 @@ import jax.numpy as jnp
 import sympy
 #from sympy import sin #or use sympy.sin, so probably want to import * otherwise getting this stuff as input might be weird
 
-import Newton
+import newton
 
 def print_hi(name):
     # Use a breakpoint in the code line below to debug your script.
