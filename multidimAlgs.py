@@ -10,82 +10,83 @@ x, y, z = sympy.symbols('x y z')
 
 
 
-def findStepSize(func, stepSizeFunc, iterNum):
-    if stepSizeFunc == sympy.oo:
+def find_step_size(func, step_size_func, iter_num):
+    if step_size_func == sympy.oo:
         #TODO: optimal step size
         # phi(a) = f(x - a*f'(x))
         # will be hard to do a perfectly optimal step size but could do smth like Armijo backtracking algorithm fairly easily
         # lots of conditions that can be used, page 4 of ch5
         return 0.25
     else:
-        return stepSizeFunc.evalf(subs={x : iterNum})
+        return step_size_func.evalf(subs={x: iter_num})
 
 
-def gradientIteration(expr, point, iterNum, varList, stepSizeFunc):
-    variables = sympy.Matrix(varList)
-    subsDict = {}
+# perform one iteration of the gradient method
+def gradient_iteration(expr, point, iter_num, var_list, step_size_func):
+    variables = sympy.Matrix(var_list)
+    subs_dict = {}
     for i in range(len(variables)):
-        subsDict[variables[i]] = point[i]
+        subs_dict[variables[i]] = point[i]
 
     gradient = sympy.Matrix([expr]).jacobian(variables).T
-    stepSizeNum = findStepSize(expr, stepSizeFunc, iterNum)
-    #print(stepSizeNum)
-    return point - gradient.evalf(subs=subsDict) * stepSizeNum
+    step_size_num = find_step_size(expr, step_size_func, iter_num)
+
+    return point - gradient.evalf(subs=subs_dict) * step_size_num
 
 
-def gradientMethod(expr, point, stepSizeFunc, numIters = 10, errorType = 'iter'):
+def gradient_method(expr, point, step_size_func, num_iters=10, error_type='iter'):
     # create enough vars
     x_1 = sympy.symbols('x_1')
-    varString = " ".join(f"x_{i+1}" for i in range(point.__len__()))
-    x_symbols = sympy.symbols(varString, seq=True)
+    var_string = " ".join(f"x_{i+1}" for i in range(point.__len__()))
+    x_symbols = sympy.symbols(var_string, seq=True)
 
     # remove x,y,z if present
-    xyzList = [x, y, z]
+    xyz_list = [x, y, z]
     for i in range(min(point.__len__(), 3)):
-        expr = expr.subs(xyzList[i], x_symbols[i])
+        expr = expr.subs(xyz_list[i], x_symbols[i])
 
     # run iters
-    if errorType == 'iter':
-        for i in range(numIters):
-            point = gradientIteration(expr, point, i+1, x_symbols, stepSizeFunc)
+    if error_type == 'iter':
+        for i in range(num_iters):
+            point = gradient_iteration(expr, point, i+1, x_symbols, step_size_func)
         return point
 
     else: #TODO: this is dangerous because it may never converge
         while True:
-            newPoint = gradientIteration(expr, point, i+1, x_symbols, stepSizeFunc)
-            if helpers.euclidianDistance(point, newPoint) < 0.05:
-                return newPoint
+            new_point = gradient_iteration(expr, point, i+1, x_symbols, step_size_func)
+            if helpers.euclidian_distance(point, new_point) < 0.05:
+                return new_point
             else:
-                point = newPoint
+                point = new_point
 
 
-def getPoint():
+def get_point():
     while True:
         try:
-            pointStr = input("Enter a starting point. For multiple dimensions, separate with a space: ")
-            pointListStr = pointStr.split()
+            point_str = input("Enter a starting point. For multiple dimensions, separate with a space: ")
+            point_list_str = point_str.split()
             point = []
-            for p in pointListStr:
+            for p in point_list_str:
                 point.append(float(p))
             return point
         except ValueError:
             print("Please enter real numbers for each coordinate.")
 
 
-def getStepSizeInput():
+def get_step_size_input():
     while True:
-        stepSize = input("\nEnter step size. "
+        step_size = input("\nEnter step size. "
                          "\nIt can be a constant, a function of 'x' - the iteration number (starting at 1), "
                          "\nor type 'optimal' to use the optimal step size at each iteration: ")
-        if (stepSize.lower() == 'optimal'):
-            stepSize = sympy.oo
+        if step_size.lower() == 'optimal':
+            step_size = sympy.oo
             break
         else:
-            stepSize = sympy.sympify(stepSize)
+            step_size = sympy.sympify(step_size)
             # eval at 1 should be safe since first iter must evaluate at 1
-            if (sympy.ask(sympy.Q.real(stepSize.evalf(subs={x: 1}))) == True):
+            if sympy.ask(sympy.Q.real(step_size.evalf(subs={x: 1}))):
                 break
             else:
                 print("\nPlease enter a valid step size.")
 
-    return stepSize
+    return step_size

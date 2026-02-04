@@ -1,10 +1,9 @@
 import sympy
 from typing import Tuple, Union, Callable
 
-import helpers
 
 
-def euclidianDistance(x, y):
+def euclidian_distance(x, y):
     if not isinstance(x, list): x = [x]
     if not isinstance(y, list): y = [y]
 
@@ -19,29 +18,29 @@ def euclidianDistance(x, y):
     return sympy.sqrt(distance) # leaves irrationals unevaluated for better precision
 
 
-def getEndCondition() -> Tuple[Callable, Union[int, float]]:
-    endConditionsDict = { '1': ["Fixed number of iterations", int, None],
+def get_end_condition() -> Tuple[Callable, Union[int, float]]:
+    end_conditions_dict = { '1': ["Fixed number of iterations", int, None],
                           '2': ["Maximum distance between points", float, helpers.euclidianDistance] }
 
-    for key, value in endConditionsDict.items():
+    for key, value in end_conditions_dict.items():
         print(key + ". " + value[0])
 
     while True:
-        ecType = input("Enter the number of the error type: ")
-        if ecType not in endConditionsDict.keys():
+        ec_type = input("Enter the number of the error type: ")
+        if ec_type not in end_conditions_dict.keys():
             print("Please enter a valid integer")
         else:
             break
 
-    valueType = endConditionsDict[ecType][1]
+    value_type = end_conditions_dict[ec_type][1]
     while True:
         try:
-            ecValue = abs(valueType(input("Enter an end condition value: ")))
+            ec_value = abs(value_type(input("Enter an end condition value: ")))
             break
         except ValueError:
             print("Please enter a valid end condition number based on the chosen type")
 
-    return ecType, ecValue
+    return ec_type, ec_value
 
 
 

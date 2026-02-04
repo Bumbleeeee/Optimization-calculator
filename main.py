@@ -6,37 +6,37 @@
 import sympy
 #from sympy import sin #or use sympy.sin, so probably want to import * otherwise getting this stuff as input might be weird
 import Newton
-import dimOneAlgs
+import dim_one_algs
 import multidimAlgs
 import sys
 
-runMap = {'1': Newton.newtonOptMethod, '2': Newton.newtonRootMethod, '3': dimOneAlgs.goldenSectionSearch,
-          '4': multidimAlgs.gradientMethod, '5': dimOneAlgs.bisectionSearch, '6': dimOneAlgs.fibonacciSearch }
+runMap = {'1': Newton.newton_opt_method, '2': Newton.newton_root_method, '3': dim_one_algs.golden_section_search,
+          '4': multidimAlgs.gradient_method, '5': dim_one_algs.bisection_search, '6': dim_one_algs.fibonacci_search }
 methods = { '1': "Newton's Optimization", '2': "Newton's Root", '3': "Golden Section",
             '4': "Gradient Descent", '5': "Bisection search", '6': "Fibonacci search" }
 
-def selectScreen():
+def select_screen():
 
     for key, value in methods.items():
         print(key + ". " + value)
 
-def chooseMethod():
+def choose_method():
     while True:
-        methodNum = input("Enter which number method to use, or Q to quit: ").strip().upper()
-        if methodNum == 'Q':
+        method_num = input("Enter which number method to use, or Q to quit: ").strip().upper()
+        if method_num == 'Q':
             sys.exit(-1)
-        f = runMap.get(methodNum)
+        f = runMap.get(method_num)
         if f is None:
             print("Invalid method")
         else:
-            print(f"Chose {methods[methodNum]} method\n")
-            return f, methodNum
+            print(f"Chose {methods[method_num]} method\n")
+            return f, method_num
 
 def main():
     sympy.init_printing()
-    selectScreen()
+    select_screen()
 
-    method, methodNum = chooseMethod()
+    method, method_num = choose_method()
 
     expr = input("Enter an expression. "
                  "\n- For functions from R to R, use 'x' as the variable. "
@@ -47,33 +47,33 @@ def main():
     # get number of iterations
     while True:
         try:
-            numIters = abs(int(input("Enter number of iterations: ")))
+            num_iters = abs(int(input("Enter number of iterations: ")))
             break
         except ValueError:
             print("Please enter an integer")
 
-    if methodNum == '1' or methodNum == '2':
+    if method_num == '1' or method_num == '2':
         # 1D algs with starting point
-        startPoint = Newton.newtonStart()
-        print(f"Expression: {expr} \tStarting Point: {startPoint}")
-        print(f"\nFinal solution: x = {method(expr, startPoint, numIters)}")
+        start_point = Newton.newton_start()
+        print(f"Expression: {expr} \tStarting Point: {start_point}")
+        print(f"\nFinal solution: x = {method(expr, start_point, num_iters)}")
 
-    elif methodNum == '3' or methodNum == '5' or methodNum == '6':
+    elif method_num == '3' or method_num == '5' or method_num == '6':
         # 1D algs with starting interval
-        a, b = dimOneAlgs.getRange()
+        a, b = dim_one_algs.get_range()
         print(f"Expression: {expr} \tStarting Interval: [{a}, {b}]")
-        leftBound, rightBound = method(expr, a, b, numIters)
-        print(f"\nFinal interval: [{leftBound}, {rightBound}]")
+        left_bound, right_bound = method(expr, a, b, num_iters)
+        print(f"\nFinal interval: [{left_bound}, {right_bound}]")
 
-    elif methodNum == '4':
+    elif method_num == '4':
         # multidim algs
-        point = multidimAlgs.getPoint()
+        point = multidimAlgs.get_point()
 
         # get step size
-        stepSizeFunc = multidimAlgs.getStepSizeInput()
+        step_size_func = multidimAlgs.get_step_size_input()
 
         print("Final solution:")
-        sympy.pprint(method(expr, sympy.Matrix(point), stepSizeFunc, numIters))
+        sympy.pprint(method(expr, sympy.Matrix(point), step_size_func, num_iters))
 
     ''' end main function'''
 
