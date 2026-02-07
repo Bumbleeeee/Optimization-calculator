@@ -1,10 +1,5 @@
-# This is a sample Python script.
-
-# Press ⌃R to execute it or replace it with your code.
-# Press Double ⇧ to search everywhere for classes, files, tool windows, actions, and settings.
-
 import sympy
-#from sympy import sin #or use sympy.sin, so probably want to import * otherwise getting this stuff as input might be weird
+#will this handle sin, cos, etc. fine or should I import them? Need to test
 import newton
 import dim_one_algs
 import multidim_algs
@@ -16,8 +11,8 @@ runMap = {'1': newton.newton_opt_method, '2': newton.newton_root_method, '3': di
 methods = { '1': "Newton's Optimization", '2': "Newton's Root", '3': "Golden Section",
             '4': "Gradient Descent", '5': "Bisection search", '6': "Fibonacci search" }
 
-def select_screen():
 
+def select_screen():
     for key, value in methods.items():
         print(key + ". " + value)
 

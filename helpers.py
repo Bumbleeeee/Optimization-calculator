@@ -9,9 +9,6 @@ def euclidian_distance(x, y):
     if isinstance(y, sympy.Matrix): y = y.flat()
     if not isinstance(x, list): x = [x]
     if not isinstance(y, list): y = [y]
-    print(type(x))
-    print(type(x[0]))
-    print(x)
 
     if len(x) != len(y):
         print("Cannot calculate the distance between two points in different dimensions")
@@ -25,7 +22,7 @@ def euclidian_distance(x, y):
 
 
 # return: end condition function, end condition threshold (int or float)
-# note: checking the end condition is delegated to individual algorithm functions
+# note: checking the end condition is delegated to individual algorithm functions for now
 def get_end_condition() -> Tuple[Callable, Union[int, float]]:
     end_conditions_dict = { '1': ["Fixed number of iterations", int, None],
                             '2': ["Maximum distance between points", float, helpers.euclidian_distance] }
