@@ -9,6 +9,7 @@ import newton
 import dim_one_algs
 import multidim_algs
 import sys
+import helpers
 
 runMap = {'1': newton.newton_opt_method, '2': newton.newton_root_method, '3': dim_one_algs.golden_section_search,
           '4': multidim_algs.gradient_method, '5': dim_one_algs.bisection_search, '6': dim_one_algs.fibonacci_search }
@@ -72,8 +73,11 @@ def main():
         # get step size
         step_size_func = multidim_algs.get_step_size_input()
 
+        #TODO: extend this to all functions in place of 'num_iters'
+        ec_func, ec_value = helpers.get_end_condition()
+
         print("Final solution:")
-        sympy.pprint(method(expr, sympy.Matrix(point), step_size_func, num_iters))
+        sympy.pprint(method(expr, sympy.Matrix(point), step_size_func, ec_func, ec_value))
 
     ''' end main function'''
 
