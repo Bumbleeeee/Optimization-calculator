@@ -34,30 +34,33 @@ def gradient_iteration(expr, point, iter_num, var_list, step_size_func):
     return point - gradient.evalf(subs=subs_dict) * step_size_num
 
 
-def gradient_method(expr, point, step_size_func, num_iters=10, error_type='iter'):
+def gradient_method(expr, point, step_size_func, end_cond_func, end_cond_value):
     # create enough vars
     x_1 = sympy.symbols('x_1')
     var_string = " ".join(f"x_{i+1}" for i in range(point.__len__()))
     x_symbols = sympy.symbols(var_string, seq=True)
 
-    # remove x,y,z if present
+    # replace x,y,z with x_1, x_2, x_3 if present
     xyz_list = [x, y, z]
     for i in range(min(point.__len__(), 3)):
         expr = expr.subs(xyz_list[i], x_symbols[i])
 
     # run iters
-    if error_type == 'iter':
-        for i in range(num_iters):
-            point = gradient_iteration(expr, point, i+1, x_symbols, step_size_func)
-        return point
+    # TODO: need some max number of iterations always, but how should this be handled? -- to avoid infinite while loop
+    # TODO: also useful b/c potentially need to keep iteration number for step size function
+    for i in range(1, 101):
+        new_point = gradient_iteration(expr, point, i, x_symbols, step_size_func)
 
-    else: #TODO: this is dangerous because it may never converge
-        while True:
-            new_point = gradient_iteration(expr, point, i+1, x_symbols, step_size_func)
-            if helpers.euclidian_distance(point, new_point) < 0.05:
+        if end_cond_func is None:
+            if i >= end_cond_value:
                 return new_point
-            else:
-                point = new_point
+        elif end_cond_func(point, new_point) <= end_cond_value:
+            return new_point
+        else:
+            point = new_point
+
+    return point
+
 
 
 def get_point():
