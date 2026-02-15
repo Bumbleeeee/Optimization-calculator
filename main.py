@@ -34,11 +34,7 @@ def main():
 
     method, method_num = choose_method()
 
-    expr = input("Enter an expression. "
-                 "\n- For functions from R to R, use 'x' as the variable. "
-                 "For functions from R^n to R, use 'x_1',...,'x_n' or x, y, z. "
-                 "\n- Please use '*' explicitly for all multiplication.\n")
-    expr = sympy.sympify(expr)
+
 
     # get number of iterations
     while True:

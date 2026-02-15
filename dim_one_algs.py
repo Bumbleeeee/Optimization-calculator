@@ -79,4 +79,3 @@ def fibonacci_search(f, a, b, num_iters=10, epsilon=0.05):
         a, b = fibonacci_iter(f, a, b, rho_i)
 
     return a, b
-
