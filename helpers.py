@@ -3,12 +3,7 @@ from typing import Tuple, Union, Callable
 
 import helpers
 
-def euclidian_distance(x, y):
-    # TODO: maybe a better way to do this
-    if isinstance(x, sympy.Matrix): x = x.flat()
-    if isinstance(y, sympy.Matrix): y = y.flat()
-    if not isinstance(x, list): x = [x]
-    if not isinstance(y, list): y = [y]
+def euclidian_distance(x: list, y: list):
 
     if len(x) != len(y):
         print("Cannot calculate the distance between two points in different dimensions")
@@ -51,6 +46,14 @@ def get_end_condition() -> Tuple[Callable, Union[int, float]]:
     ec_func: Callable = end_conditions_dict[ec_type][2]
     return ec_func, ec_value
 
+
+# gets user input for the function to optimize
+def get_func_to_optimize():
+    expr = input("Enter an expression. "
+                 "\n- For functions from R to R, use 'x' as the variable. "
+                 "For functions from R^n to R, use 'x_1',...,'x_n' or x, y, z. "
+                 "\n- Please use '*' explicitly for all multiplication.\n")
+    return sympy.sympify(expr)
 
 
 

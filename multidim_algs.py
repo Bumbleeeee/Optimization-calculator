@@ -1,5 +1,7 @@
 import sympy
 import helpers
+from numerical_optimization_method import NumericalOptimizationMethod
+from abc import ABC
 
 x, y, z = sympy.symbols('x y z')
 # note the use of point-direction-stepsize so individual iterations should probably handle the step size
@@ -21,49 +23,7 @@ def find_step_size(func, step_size_func, iter_num):
         return step_size_func.evalf(subs={x: iter_num})
 
 
-# perform one iteration of the gradient method
-def gradient_iteration(expr, point, iter_num, var_list, step_size_func):
-    variables = sympy.Matrix(var_list)
-    subs_dict = {}
-    for i in range(len(variables)):
-        subs_dict[variables[i]] = point[i]
-
-    gradient = sympy.Matrix([expr]).jacobian(variables).T
-    step_size_num = find_step_size(expr, step_size_func, iter_num)
-
-    return point - gradient.evalf(subs=subs_dict) * step_size_num
-
-
-def gradient_method(expr, point, step_size_func, end_cond_func, end_cond_value):
-    # create enough vars
-    x_1 = sympy.symbols('x_1')
-    var_string = " ".join(f"x_{i+1}" for i in range(point.__len__()))
-    x_symbols = sympy.symbols(var_string, seq=True)
-
-    # replace x,y,z with x_1, x_2, x_3 if present
-    xyz_list = [x, y, z]
-    for i in range(min(point.__len__(), 3)):
-        expr = expr.subs(xyz_list[i], x_symbols[i])
-
-    # run iters
-    # TODO: need some max number of iterations always, but how should this be handled? -- to avoid infinite while loop
-    # TODO: also useful b/c potentially need to keep iteration number for step size function
-    for i in range(1, 101):
-        new_point = gradient_iteration(expr, point, i, x_symbols, step_size_func)
-
-        if end_cond_func is None:
-            if i >= end_cond_value:
-                return new_point
-        elif end_cond_func(point, new_point) <= end_cond_value:
-            return new_point
-        else:
-            point = new_point
-
-    return point
-
-
-
-def get_point():
+def input_point():
     while True:
         try:
             point_str = input("Enter a starting point. For multiple dimensions, separate with a space: ")
@@ -93,3 +53,70 @@ def get_step_size_input():
                 print("\nPlease enter a valid step size.")
 
     return step_size
+
+
+class MultiDimAlg(NumericalOptimizationMethod, ABC):
+    point: sympy.Matrix = None
+    new_point: sympy.Matrix # this stores the most recently calculated iterate
+
+    def __init__(self):
+        super().__init__()
+        self.step_size_func = get_step_size_input()
+        self.new_point = sympy.Matrix(input_point())
+        self.symbols_list = self.create_symbols()
+        self.end_cond_func, self.end_cond_val = helpers.get_end_condition()
+
+
+    # TODO: this is very hard to read, when I add more end conditions maybe there's a way to fix this
+    def check_end_conditions(self) -> bool:
+        ret_val = False
+        if self.end_cond_func is None:
+            if self.iter_num >= self.end_cond_val:
+                ret_val = True
+        elif self.end_cond_func(self.point.flat(), self.new_point.flat()) <= self.end_cond_val:
+            ret_val = True
+
+        return ret_val
+
+
+    def get_point(self):
+        return self.new_point
+
+
+    # TODO: not really a good place for this, but works for now
+    # creates symbols x_1, ..., x_n to standardize the symbols used
+    def create_symbols(self):
+        var_string = " ".join(f"x_{i + 1}" for i in range(self.new_point.__len__()))
+        x_symbols = sympy.symbols(var_string, seq=True)
+
+        # replace x,y,z with x_1, x_2, x_3 if present
+        xyz_list = [x, y, z]
+        for i in range(min(self.new_point.__len__(), 3)):
+            self.expression = self.expression.subs(xyz_list[i], x_symbols[i])
+
+        return x_symbols
+
+
+
+class GradientMethod(MultiDimAlg):
+
+    def __init__(self):
+        super().__init__()
+
+
+    # perform one gradient method iteration
+    def method_iteration(self):
+        self.point = self.new_point
+
+        variables = sympy.Matrix(self.symbols_list)
+        subs_dict = {}
+        for i in range(len(variables)):
+            subs_dict[variables[i]] = self.point[i]
+
+        gradient = sympy.Matrix([self.expression]).jacobian(variables).T
+        step_size_num = find_step_size(self.expression, self.step_size_func, self.iter_num + 1)
+
+        self.new_point = self.point - gradient.evalf(subs=subs_dict) * step_size_num
+
+
+
