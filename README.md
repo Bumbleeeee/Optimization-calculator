@@ -3,6 +3,8 @@ A calculator for various numerical optimization algorithms. Contains a variety o
 including Newton's method and gradient descent, with more always coming soon. Just follow the prompts and the program
 will do the rest.
 
+## For more frequent updates on the state of the project, check the announcements in the discussions tab
+
 - NOTE: optimal step size is not currently functional 
 
 ### Installation
