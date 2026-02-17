@@ -54,17 +54,20 @@ def get_step_size_input():
 
     return step_size
 
+
 class MultiDimAlg(NumericalOptimizationMethod, ABC):
     point: sympy.Matrix = None
     new_point: sympy.Matrix # this stores the most recently calculated iterate
 
-    def __int__(self):
+    def __init__(self):
+        super().__init__()
         self.step_size_func = get_step_size_input()
         self.new_point = sympy.Matrix(input_point())
         self.symbols_list = self.create_symbols()
         self.end_cond_func, self.end_cond_val = helpers.get_end_condition()
 
 
+    # TODO: this is very hard to read, when I add more end conditions maybe there's a way to fix this
     def check_end_conditions(self) -> bool:
         ret_val = False
         if self.end_cond_func is None:
@@ -83,12 +86,12 @@ class MultiDimAlg(NumericalOptimizationMethod, ABC):
     # TODO: not really a good place for this, but works for now
     # creates symbols x_1, ..., x_n to standardize the symbols used
     def create_symbols(self):
-        var_string = " ".join(f"x_{i + 1}" for i in range(self.point.__len__()))
+        var_string = " ".join(f"x_{i + 1}" for i in range(self.new_point.__len__()))
         x_symbols = sympy.symbols(var_string, seq=True)
 
         # replace x,y,z with x_1, x_2, x_3 if present
         xyz_list = [x, y, z]
-        for i in range(min(self.point.__len__(), 3)):
+        for i in range(min(self.new_point.__len__(), 3)):
             self.expression = self.expression.subs(xyz_list[i], x_symbols[i])
 
         return x_symbols
@@ -111,7 +114,7 @@ class GradientMethod(MultiDimAlg):
             subs_dict[variables[i]] = self.point[i]
 
         gradient = sympy.Matrix([self.expression]).jacobian(variables).T
-        step_size_num = find_step_size(self.expression, self.step_size_func, self.iter_num)
+        step_size_num = find_step_size(self.expression, self.step_size_func, self.iter_num + 1)
 
         self.new_point = self.point - gradient.evalf(subs=subs_dict) * step_size_num
 

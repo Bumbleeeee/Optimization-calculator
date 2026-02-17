@@ -6,8 +6,8 @@ import multidim_algs
 import sys
 import helpers
 
-runMap = {'1': newton.newton_opt_method, '2': newton.newton_root_method, '3': dim_one_algs.golden_section_search,
-          '4': multidim_algs.gradient_method, '5': dim_one_algs.bisection_search, '6': dim_one_algs.fibonacci_search }
+runMap = {'1': newton.NewtonOptimizationMethod, '2': newton.NewtonRootFindingMethod, '3': dim_one_algs.GoldenSectionSearch,
+          '4': multidim_algs.GradientMethod, '5': dim_one_algs.BisectionSearch, '6': dim_one_algs.FibonacciSearch }
 methods = { '1': "Newton's Optimization", '2': "Newton's Root", '3': "Golden Section",
             '4': "Gradient Descent", '5': "Bisection search", '6': "Fibonacci search" }
 
@@ -26,49 +26,19 @@ def choose_method():
             print("Invalid method")
         else:
             print(f"Chose {methods[method_num]} method\n")
-            return f, method_num
+            return f
 
 def main():
-    sympy.init_printing()
+
     select_screen()
 
-    method, method_num = choose_method()
+    method = choose_method()
 
+    method_obj = method()
 
+    #TODO: need a better way to print because the output is ugly rn - perhaps build it into classes
+    print(method_obj.run_method())
 
-    # get number of iterations
-    while True:
-        try:
-            num_iters = abs(int(input("Enter number of iterations: ")))
-            break
-        except ValueError:
-            print("Please enter an integer")
-
-    if method_num == '1' or method_num == '2':
-        # 1D algs with starting point
-        start_point = newton.newton_start()
-        print(f"Expression: {expr} \tStarting Point: {start_point}")
-        print(f"\nFinal solution: x = {method(expr, start_point, num_iters)}")
-
-    elif method_num == '3' or method_num == '5' or method_num == '6':
-        # 1D algs with starting interval
-        a, b = dim_one_algs.get_range()
-        print(f"Expression: {expr} \tStarting Interval: [{a}, {b}]")
-        left_bound, right_bound = method(expr, a, b, num_iters)
-        print(f"\nFinal interval: [{left_bound}, {right_bound}]")
-
-    elif method_num == '4':
-        # multidim algs
-        point = multidim_algs.get_point()
-
-        # get step size
-        step_size_func = multidim_algs.get_step_size_input()
-
-        #TODO: extend this to all functions in place of 'num_iters'
-        ec_func, ec_value = helpers.get_end_condition()
-
-        print("Final solution:")
-        sympy.pprint(method(expr, sympy.Matrix(point), step_size_func, ec_func, ec_value))
 
     ''' end main function'''
 

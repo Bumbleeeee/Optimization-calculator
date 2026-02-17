@@ -9,7 +9,7 @@ class NumericalOptimizationMethod(ABC):
         self.expression = helpers.get_func_to_optimize()
         self.iter_num = 0
 
-    # TODO: do i want to store points here??? maybe iteration number
+
     def run_method(self):
         for self.iter_num in range(MAX_ITERS):
             self.method_iteration()
@@ -17,6 +17,7 @@ class NumericalOptimizationMethod(ABC):
         return self.get_point()
 
     # perform one iteration of a method
+    # this method should take the point from the previous iteration and store it at the beginning
     @abstractmethod
     def method_iteration(self):
         pass
