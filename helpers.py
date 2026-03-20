@@ -1,5 +1,5 @@
 import sympy
-from typing import Tuple, Union, Callable
+from typing import Tuple, Union, Callable, List
 
 import helpers
 
@@ -54,6 +54,22 @@ def get_func_to_optimize():
                  "For functions from R^n to R, use 'x_1',...,'x_n' or x, y, z. "
                  "\n- Please use '*' explicitly for all multiplication.\n")
     return sympy.sympify(expr)
+
+
+def input_multi_float(prompt = "Enter a starting point: ") -> List[float]:
+    while True:
+        try:
+            input_str = input(prompt)
+            input_list = input_str.split()
+            floats = []
+            for p in input_list:
+                floats.append(float(p))
+            return floats
+        except ValueError:
+            print("Please only enter real numbers.")
+
+
+            #"Enter a starting point. For multiple dimensions, separate with a space: "
 
 
 

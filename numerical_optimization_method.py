@@ -7,14 +7,15 @@ class NumericalOptimizationMethod(ABC):
 
     def __init__(self):
         self.expression = helpers.get_func_to_optimize()
-        self.iter_num = 0
+        self.iter_num = 1
 
 
     def run_method(self):
-        for self.iter_num in range(MAX_ITERS):
+        for self.iter_num in range(self.iter_num, MAX_ITERS):
             self.method_iteration()
+            print(f"iteration {self.iter_num}")
             if self.check_end_conditions(): break
-        return self.get_point()
+        return self.get_cur_iterate()
 
     # perform one iteration of a method
     # this method should take the point from the previous iteration and store it at the beginning
@@ -30,6 +31,6 @@ class NumericalOptimizationMethod(ABC):
     # return current point (numerical approximation of optimal value)
     # TODO: what if we are dealing with intervals i.e. one dimensional algorithms
     @abstractmethod
-    def get_point(self):
+    def get_cur_iterate(self):
         pass
 

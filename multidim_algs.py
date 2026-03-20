@@ -2,6 +2,7 @@ import sympy
 import helpers
 from numerical_optimization_method import NumericalOptimizationMethod
 from abc import ABC
+import step_size_algorithms
 
 x, y, z = sympy.symbols('x y z')
 # note the use of point-direction-stepsize so individual iterations should probably handle the step size
@@ -9,31 +10,6 @@ x, y, z = sympy.symbols('x y z')
 #       (just pass through to iter which delegates the step size work elsewhere right before returning)
 # user should be able to enter a number, function, OR choose optimal step size
 # WHEN ENTERING A FUNCTION NOTE THE ITER NUM STARTS AT 1 -- need to make this clear
-
-
-
-def find_step_size(func, step_size_func, iter_num):
-    if step_size_func == sympy.oo:
-        #TODO: optimal step size
-        # phi(a) = f(x - a*f'(x))
-        # will be hard to do a perfectly optimal step size but could do smth like Armijo backtracking algorithm fairly easily
-        # lots of conditions that can be used, page 4 of ch5
-        return 0.25
-    else:
-        return step_size_func.evalf(subs={x: iter_num})
-
-
-def input_point():
-    while True:
-        try:
-            point_str = input("Enter a starting point. For multiple dimensions, separate with a space: ")
-            point_list_str = point_str.split()
-            point = []
-            for p in point_list_str:
-                point.append(float(p))
-            return point
-        except ValueError:
-            print("Please enter real numbers for each coordinate.")
 
 
 def get_step_size_input():
@@ -62,7 +38,7 @@ class MultiDimAlg(NumericalOptimizationMethod, ABC):
     def __init__(self):
         super().__init__()
         self.step_size_func = get_step_size_input()
-        self.new_point = sympy.Matrix(input_point())
+        self.new_point = sympy.Matrix(helpers.input_multi_float("Enter a starting point. For multiple dimensions, separate with a space: "))
         self.symbols_list = self.create_symbols()
         self.end_cond_func, self.end_cond_val = helpers.get_end_condition()
 
@@ -79,7 +55,7 @@ class MultiDimAlg(NumericalOptimizationMethod, ABC):
         return ret_val
 
 
-    def get_point(self):
+    def get_cur_iterate(self):
         return self.new_point
 
 
@@ -114,7 +90,12 @@ class GradientMethod(MultiDimAlg):
             subs_dict[variables[i]] = self.point[i]
 
         gradient = sympy.Matrix([self.expression]).jacobian(variables).T
-        step_size_num = find_step_size(self.expression, self.step_size_func, self.iter_num + 1)
+
+        # handle different step size methods
+        if self.step_size_func == sympy.oo:
+            step_size_num = step_size_algorithms.armijo_backtracking_alg(self.expression, self.point, variables)
+        else:
+            step_size_num = self.step_size_func.evalf(subs={x: self.iter_num})
 
         self.new_point = self.point - gradient.evalf(subs=subs_dict) * step_size_num
 

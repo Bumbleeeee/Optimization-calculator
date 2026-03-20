@@ -7,15 +7,6 @@ import sys
 x = sympy.symbols('x')
 
 
-def newton_start_point():
-    while True:
-        try:
-            start_point = float(input("Enter a starting point: "))
-            return start_point
-        except ValueError:
-            print("Invalid input, please enter a real number")
-
-
 # TODO: this whole class of algs could really be a subset of something else, but fine for now
 class NewtonAlg(NumericalOptimizationMethod, ABC):
     point: float = None
@@ -23,7 +14,7 @@ class NewtonAlg(NumericalOptimizationMethod, ABC):
 
     def __init__(self):
         super().__init__()
-        self.new_point = newton_start_point()
+        self.new_point = helpers.input_multi_float()[0]
         self.end_cond_func, self.end_cond_val = helpers.get_end_condition()
 
 
@@ -38,7 +29,7 @@ class NewtonAlg(NumericalOptimizationMethod, ABC):
         return ret_val
 
 
-    def get_point(self):
+    def get_cur_iterate(self):
         return self.new_point
 
 

@@ -8,19 +8,8 @@ x = sympy.symbols('x')
 PHI = (3-sympy.sqrt(5)) / 2
 
 def get_range():
-    while True:
-        try:
-            a = float(input("Enter the left end of the search interval: "))
-            break
-        except ValueError:
-            print("Invalid input, please enter a real number")
-
-    while True:
-        try:
-            b = float(input("Enter the right end of the search interval: "))
-            break
-        except ValueError:
-            print("Invalid input, please enter a real number")
+    a = helpers.input_multi_float("Enter the left end of the search interval: ")
+    b = helpers.input_multi_float("Enter the right end of the search interval: ")
 
     return min(a, b), max(a, b) # swaps a and b if user entered right then left
 
@@ -39,14 +28,9 @@ def get_num_iters():
 
 def get_epsilon():
     while True:
-        try:
-            a = abs(float(input("Enter a value for epsilon. If unsure, use 0.05: ")))
-        except ValueError:
-            print("Invalid input, please enter a real number")
-        else:
-            if a >= 0 or a <= 0.5: break
-            print("Invalid input, please enter a number in the interval [0, 0.5]")
-
+        a = helpers.input_multi_float("Enter a value for epsilon. If unsure, use 0.05: ")[0]
+        if 0 <= a <= 0.5: break
+        print("Invalid input, please enter a number in the interval [0, 0.5]")
     return a
 
 
@@ -105,7 +89,7 @@ class DimOneAlg(NumericalOptimizationMethod, ABC):
         return ret_val
 
 
-    def get_point(self):
+    def get_cur_iterate(self):
         return self.new_interval
 
 
@@ -178,14 +162,14 @@ class FibonacciSearch(DimOneAlg):
 
 
     def method_iteration(self):
-        # need to know current iteration (we do, 0 indexed)
+        # need to know current iteration (we do, 1 indexed)
         self.interval = self.new_interval
         a = self.interval[0]
         b = self.interval[1]
         num_iters = self.end_cond_val
 
-        rho = 1 - (self.fib_numbers[num_iters - self.iter_num] / self.fib_numbers[num_iters - self.iter_num + 1])
-        if self.iter_num == num_iters - 1:
+        rho = 1 - (self.fib_numbers[num_iters - self.iter_num-1] / self.fib_numbers[num_iters - self.iter_num])
+        if self.iter_num == num_iters:
             rho -= self.epsilon
 
         a1 = a + rho * (b - a)
