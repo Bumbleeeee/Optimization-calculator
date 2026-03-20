@@ -76,11 +76,7 @@ todo: (NOTE THAT CURRENTLY THE "FINAL SOLUTION" IS THE APPROXIMATION OF THE INPU
 #TODO: give final numeric solution for dim one methods? (currently just return an interval)
 #TODO: command to quit at any time - maybe with 'await'
 
-#TODO: maybe can simplify select conditions with '*' or '**' in functions for unknown number of params? Page 10 of cheat sheet
-    # https://realpython.com/python-type-hints-multiple-types/
-    # https://realpython.com/python-kwargs-and-args/#using-the-python-args-variable-in-function-definitions
 
-#TODO: variable epsilon for fib method - could just prompt for it in the function itself, otherwise maybe similar soln to above line
 
 #TODO: checks for initial conditions such as strict unimodality on the provided interval
 #TODO: check if descent condition is satisfied, otherwise alter step size (for nonoptimal step size ofc)
@@ -88,4 +84,4 @@ todo: (NOTE THAT CURRENTLY THE "FINAL SOLUTION" IS THE APPROXIMATION OF THE INPU
 #TODO: secant method for when newton's fails (or just to use in general)
 
 
-# 'raise' [exceptiontype] to manually raise exception (instead of just printing failure and exiting)
+# 'raise [exceptiontype]' to manually raise exception (instead of just printing failure and exiting)
