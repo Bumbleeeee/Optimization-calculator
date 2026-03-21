@@ -5,15 +5,15 @@ MAX_ITERS = 1000 # to avoid infinite loop when an algo is run with initial condi
 
 class NumericalOptimizationMethod(ABC):
 
-    def __init__(self):
-        self.expression = helpers.get_func_to_optimize()
+    def __init__(self, function):
+        self.expression = function
         self.iter_num = 1
 
 
     def run_method(self):
         for self.iter_num in range(self.iter_num, MAX_ITERS):
             self.method_iteration()
-            print(f"iteration {self.iter_num}")
+            #print(f"iteration {self.iter_num}")
             if self.check_end_conditions(): break
         return self.get_cur_iterate()
 

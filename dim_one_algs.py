@@ -8,8 +8,8 @@ x = sympy.symbols('x')
 PHI = (3-sympy.sqrt(5)) / 2
 
 def get_range():
-    a = helpers.input_multi_float("Enter the left end of the search interval: ")
-    b = helpers.input_multi_float("Enter the right end of the search interval: ")
+    a = helpers.input_multi_float("Enter the left end of the search interval: ")[0]
+    b = helpers.input_multi_float("Enter the right end of the search interval: ")[0]
 
     return min(a, b), max(a, b) # swaps a and b if user entered right then left
 
@@ -70,9 +70,10 @@ class DimOneAlg(NumericalOptimizationMethod, ABC):
     end_cond_func: Callable = None # TODO: not really a fan of this but i guess it works
     end_cond_val: float
 
-    def __init__(self):
-        super().__init__()
-        self.new_interval = get_range()
+    def __init__(self, function, start_interval):
+        super().__init__(function)
+        self.new_interval = start_interval
+
 
 
     # TODO: need to be careful here b/c interval, not point, but should be OK for now since only one coord changes
@@ -96,9 +97,9 @@ class DimOneAlg(NumericalOptimizationMethod, ABC):
 
 class GoldenSectionSearch(DimOneAlg):
 
-    def __init__(self):
-        super().__init__()
-        self.end_cond_func, self.end_cond_val = helpers.get_end_condition()
+    def __init__(self, function, start_interval, end_conditions):
+        super().__init__(function, start_interval)
+        self.end_cond_func, self.end_cond_val = end_conditions
 
 
     # TODO: is it necessary to evaluate phi - can we wait until the end?
@@ -122,9 +123,9 @@ class GoldenSectionSearch(DimOneAlg):
 
 class BisectionSearch(DimOneAlg):
 
-    def __init__(self):
-        super().__init__()
-        self.end_cond_func, self.end_cond_val = helpers.get_end_condition()
+    def __init__(self, function, start_interval, end_conditions):
+        super().__init__(function, start_interval)
+        self.end_cond_func, self.end_cond_val = end_conditions
 
 
     def method_iteration(self):
@@ -153,12 +154,12 @@ class FibonacciSearch(DimOneAlg):
     # TODO: what about number of iterations - given that this is a necessity for the method
     fib_numbers: list
 
-    def __init__(self):
-        super().__init__()
+    def __init__(self, function, start_interval, num_iters, epsilon):
+        super().__init__(function, start_interval)
         # figure out number of iters then precompute fib numbers
-        self.end_cond_val: int = get_num_iters()
+        self.end_cond_val: int = num_iters
         self.compute_fib_nums()
-        self.epsilon = get_epsilon()
+        self.epsilon = epsilon
 
 
     def method_iteration(self):
@@ -168,7 +169,7 @@ class FibonacciSearch(DimOneAlg):
         b = self.interval[1]
         num_iters = self.end_cond_val
 
-        rho = 1 - (self.fib_numbers[num_iters - self.iter_num-1] / self.fib_numbers[num_iters - self.iter_num])
+        rho = 1 - (self.fib_numbers[num_iters+2 - self.iter_num-1] / self.fib_numbers[num_iters+2 - self.iter_num])
         if self.iter_num == num_iters:
             rho -= self.epsilon
 
