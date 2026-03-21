@@ -22,6 +22,7 @@ def get_end_condition() -> Tuple[Callable, Union[int, float]]:
     end_conditions_dict = { '1': ["Fixed number of iterations", int, None],
                             '2': ["Maximum distance between points", float, helpers.euclidian_distance] }
 
+    print()
     for key, value in end_conditions_dict.items():
         print(key + ". " + value[0])
 
@@ -29,7 +30,7 @@ def get_end_condition() -> Tuple[Callable, Union[int, float]]:
     while True:
         ec_type: str = input("Enter the number of the error type: ")
         if ec_type not in end_conditions_dict.keys():
-            print("Please enter a valid integer")
+            print("\nPlease enter a valid integer\n")
         else:
             break
 
@@ -38,10 +39,10 @@ def get_end_condition() -> Tuple[Callable, Union[int, float]]:
     # get threshold value for end condition
     while True:
         try:
-            ec_value = abs(value_type(input("Enter an end condition value: ")))
+            ec_value = abs(value_type(input("\nEnter an end condition value: ")))
             break
         except ValueError:
-            print("Please enter a valid end condition number based on the chosen type")
+            print("\nPlease enter a valid end condition number based on the chosen type\n")
 
     ec_func: Callable = end_conditions_dict[ec_type][2]
     return ec_func, ec_value
@@ -59,7 +60,7 @@ def get_func_to_optimize():
 def input_multi_float(prompt = "Enter a starting point: ") -> List[float]:
     while True:
         try:
-            input_str = input(prompt)
+            input_str = input(f"\n{prompt}")
             input_list = input_str.split()
             floats = []
             for p in input_list:

@@ -5,39 +5,111 @@ import dim_one_algs
 import multidim_algs
 import sys
 import helpers
-
-runMap = {'1': newton.NewtonOptimizationMethod, '2': newton.NewtonRootFindingMethod, '3': dim_one_algs.GoldenSectionSearch,
-          '4': multidim_algs.GradientMethod, '5': dim_one_algs.BisectionSearch, '6': dim_one_algs.FibonacciSearch }
-methods = { '1': "Newton's Optimization", '2': "Newton's Root", '3': "Golden Section",
-            '4': "Gradient Descent", '5': "Bisection search", '6': "Fibonacci search" }
+from typing import Callable
 
 
-def select_screen():
-    for key, value in methods.items():
-        print(key + ". " + value)
+# TODO: a bit repetitive in here, maybe can consolidate
+OPT_CONFIG = {
+    "Gradient Descent": {
+        "class": multidim_algs.GradientMethod,
+        "params": {
+            "function": helpers.get_func_to_optimize,
+            "step_size_func": multidim_algs.get_step_size_input,
+            "start_point": lambda: sympy.Matrix(helpers.input_multi_float("Enter a starting point. For multiple dimensions, separate with a space: ")),
+            "end_conditions": helpers.get_end_condition
+        }
+    },
+    "Newton's Optimization": {
+        "class": newton.NewtonOptimizationMethod,
+        "params": {
+            "function": helpers.get_func_to_optimize,
+            "start_point": lambda: helpers.input_multi_float()[0],
+            "end_conditions": helpers.get_end_condition
+        }
+    },
+    "Newton's Root": {
+        "class": newton.NewtonRootFindingMethod,
+        "params": {
+            "function": helpers.get_func_to_optimize,
+            "start_point": lambda: helpers.input_multi_float()[0],
+            "end_conditions": helpers.get_end_condition
+        }
+    },
+    "Golden Section": {
+        "class": dim_one_algs.GoldenSectionSearch,
+        "params": {
+            "function": helpers.get_func_to_optimize,
+            "start_interval": dim_one_algs.get_range,
+            "end_conditions": helpers.get_end_condition
+        }
+    },
+    "Fibonacci search": {
+        "class": dim_one_algs.FibonacciSearch,
+        "params": {
+            "function": helpers.get_func_to_optimize,
+            "start_interval": dim_one_algs.get_range,
+            "num_iters": dim_one_algs.get_num_iters,
+            "epsilon": dim_one_algs.get_epsilon
+        }
+    },
+    "Bisection search": {
+        "class": dim_one_algs.BisectionSearch,
+        "params": {
+            "function": helpers.get_func_to_optimize,
+            "start_interval": dim_one_algs.get_range,
+            "end_conditions": helpers.get_end_condition
+        }
+    }
 
-def choose_method():
+}
+
+
+def select_screen(key_list: list):
+    for i in range(len(key_list)):
+        print(f"{i+1}. {key_list[i]}")
+
+def choose_method() -> str:
+    key_list = list(OPT_CONFIG.keys())
+    select_screen(key_list)
+
     while True:
-        method_num = input("Enter which number method to use, or Q to quit: ").strip().upper()
-        if method_num == 'Q':
-            sys.exit(-1)
-        f = runMap.get(method_num)
-        if f is None:
+        try:
+            method_num = input("Enter which number method to use, or Q to quit: ").strip().upper()
+            if method_num == 'Q':
+                sys.exit(-1)
+            method_num = int(method_num)
+            if 1 <= method_num <= len(key_list): break
+        except ValueError:
             print("Invalid method")
-        else:
-            print(f"Chose {methods[method_num]} method\n")
-            return f
+
+    f_str = key_list[method_num-1]
+    print(f"Chose {f_str} method\n")
+    return f_str
+
+
+def get_params(method_name: str):
+    config = OPT_CONFIG.get(method_name)
+    if config is None:
+        print("Error - Invalid method")
+        sys.exit(-1)
+
+    args_dict = {}
+    for param_name, getter_func in config["params"].items():
+        args_dict[param_name] = getter_func()
+
+    return args_dict
+
 
 def main():
 
-    select_screen()
+    method_name = choose_method()
+    args_dict = get_params(method_name)
 
-    method = choose_method()
-
-    method_obj = method()
+    # method_obj is initialized object of proper class for chosen optimization method
+    method_obj = OPT_CONFIG[method_name]["class"](**args_dict)
 
     #TODO: need a better way to print because the output is ugly rn - perhaps build it into classes
-    print(method_obj.run_method())
+    print(f"\nApproximate optimal solution: {method_obj.run_method()}")
 
 
     ''' end main function'''

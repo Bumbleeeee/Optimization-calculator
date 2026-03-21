@@ -1,7 +1,6 @@
 import sympy
 from abc import ABC
 from numerical_optimization_method import NumericalOptimizationMethod
-import helpers
 import sys
 
 x = sympy.symbols('x')
@@ -12,10 +11,10 @@ class NewtonAlg(NumericalOptimizationMethod, ABC):
     point: float = None
     new_point: float  # this stores the most recently calculated iterate
 
-    def __init__(self):
-        super().__init__()
-        self.new_point = helpers.input_multi_float()[0]
-        self.end_cond_func, self.end_cond_val = helpers.get_end_condition()
+    def __init__(self, function, start_point, end_conditions):
+        super().__init__(function)
+        self.new_point = start_point
+        self.end_cond_func, self.end_cond_val = end_conditions
 
 
     def check_end_conditions(self) -> bool:
@@ -36,8 +35,8 @@ class NewtonAlg(NumericalOptimizationMethod, ABC):
 
 class NewtonOptimizationMethod(NewtonAlg):
 
-    def __init__(self):
-        super().__init__()
+    def __init__(self, function, start_point, end_conditions):
+        super().__init__(function, start_point, end_conditions)
 
 
     def method_iteration(self):
@@ -58,8 +57,8 @@ class NewtonOptimizationMethod(NewtonAlg):
 
 class NewtonRootFindingMethod(NewtonAlg):
 
-    def __init__(self):
-        super().__init__()
+    def __init__(self, function, start_point, end_conditions):
+        super().__init__(function, start_point, end_conditions)
 
 
     def method_iteration(self):

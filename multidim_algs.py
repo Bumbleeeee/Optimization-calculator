@@ -1,5 +1,4 @@
 import sympy
-import helpers
 from numerical_optimization_method import NumericalOptimizationMethod
 from abc import ABC
 import step_size_algorithms
@@ -35,12 +34,12 @@ class MultiDimAlg(NumericalOptimizationMethod, ABC):
     point: sympy.Matrix = None
     new_point: sympy.Matrix # this stores the most recently calculated iterate
 
-    def __init__(self):
-        super().__init__()
-        self.step_size_func = get_step_size_input()
-        self.new_point = sympy.Matrix(helpers.input_multi_float("Enter a starting point. For multiple dimensions, separate with a space: "))
+    def __init__(self, function, step_size_func, start_point, end_conditions):
+        super().__init__(function)
+        self.step_size_func = step_size_func
+        self.new_point = start_point
         self.symbols_list = self.create_symbols()
-        self.end_cond_func, self.end_cond_val = helpers.get_end_condition()
+        self.end_cond_func, self.end_cond_val = end_conditions
 
 
     # TODO: this is very hard to read, when I add more end conditions maybe there's a way to fix this
@@ -76,8 +75,8 @@ class MultiDimAlg(NumericalOptimizationMethod, ABC):
 
 class GradientMethod(MultiDimAlg):
 
-    def __init__(self):
-        super().__init__()
+    def __init__(self, function, step_size_func, start_point, end_conditions):
+        super().__init__(function, step_size_func, start_point, end_conditions)
 
 
     # perform one gradient method iteration
