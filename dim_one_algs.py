@@ -7,11 +7,11 @@ from typing import Callable
 x = sympy.symbols('x')
 PHI = (3-sympy.sqrt(5)) / 2
 
-def get_range():
+def get_range() -> list:
     a = helpers.input_multi_float("Enter the left end of the search interval: ")[0]
     b = helpers.input_multi_float("Enter the right end of the search interval: ")[0]
 
-    return min(a, b), max(a, b) # swaps a and b if user entered right then left
+    return [min(a, b), max(a, b)] # swaps a and b if user entered right then left
 
 
 # TODO: this is a common func it seems like, see where else we have smth similar
@@ -65,8 +65,8 @@ def fibonacci_search(f, a, b, num_iters=10, epsilon=0.05):
 
 
 class DimOneAlg(NumericalOptimizationMethod, ABC):
-    interval: tuple = None
-    new_interval: tuple
+    interval: list = None
+    new_interval: list
     end_cond_func: Callable = None # TODO: not really a fan of this but i guess it works
     end_cond_val: float
 
@@ -76,18 +76,10 @@ class DimOneAlg(NumericalOptimizationMethod, ABC):
 
 
 
-    # TODO: need to be careful here b/c interval, not point, but should be OK for now since only one coord changes
-        # TODO: at a time - although may not get the intended behavior with a given end condition
-    # TODO: if all is well, maybe check_end_conditions can be a helper func since impl seems similar in all methods
     def check_end_conditions(self):
-        ret_val = False
-        if self.end_cond_func is None:
-            if self.iter_num >= self.end_cond_val:
-                ret_val = True
-        elif self.end_cond_func(self.interval, self.new_interval) <= self.end_cond_val:
-            ret_val = True
-
-        return ret_val
+        return helpers.check_end_conditions(self.end_cond_func, self.end_cond_val,
+                                            self.interval, self.new_interval,
+                                            self.iter_num)
 
 
     def get_cur_iterate(self):

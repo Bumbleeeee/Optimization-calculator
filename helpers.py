@@ -1,7 +1,7 @@
 import sympy
 from typing import Tuple, Union, Callable, List
-
 import helpers
+
 
 def euclidian_distance(x: list, y: list):
 
@@ -46,6 +46,21 @@ def get_end_condition() -> Tuple[Callable, Union[int, float]]:
 
     ec_func: Callable = end_conditions_dict[ec_type][2]
     return ec_func, ec_value
+
+
+def check_end_conditions(end_cond_func, end_cond_val, point: list, new_point: list, iter_num) -> bool:
+    ret_val = False
+
+    # fixed number of iterations
+    if end_cond_func is None:
+        if iter_num >= end_cond_val:
+            ret_val = True
+
+    # max distance between points
+    elif end_cond_func(point, new_point) <= end_cond_val:
+        ret_val = True
+
+    return ret_val
 
 
 # gets user input for the function to optimize
