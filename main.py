@@ -64,9 +64,11 @@ OPT_CONFIG = {
 }
 
 
+# print the method select screen
 def select_screen(key_list: list):
     for i in range(len(key_list)):
         print(f"{i+1}. {key_list[i]}")
+
 
 def choose_method() -> str:
     key_list = list(OPT_CONFIG.keys())
@@ -140,9 +142,7 @@ todo: (NOTE THAT CURRENTLY THE "FINAL SOLUTION" IS THE APPROXIMATION OF THE INPU
     
 '''
 #TODO: more error types
-    # did euclidian dist, need to handle inputting the epsilon where we break AND **** handling args for dif inputs ****
-    #TODO: actually use the end condition function -- need to find a way to use it without checking conditions repeatedly
-#TODO: optimal step size, handle certain constants (pi, e, etc) and irrationals (sqrt2) as inputs
+#TODO: handle certain constants (pi, e, etc) and irrationals (sqrt2) as inputs
 #TODO: more methods and graph(?)/plot something
 #TODO: can also implement a bisection method for root finding very easily, but maybe not worth it
 #TODO: give final numeric solution for dim one methods? (currently just return an interval)

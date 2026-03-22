@@ -2,6 +2,7 @@ import sympy
 from abc import ABC
 from numerical_optimization_method import NumericalOptimizationMethod
 import sys
+import helpers
 
 x = sympy.symbols('x')
 
@@ -18,14 +19,9 @@ class NewtonAlg(NumericalOptimizationMethod, ABC):
 
 
     def check_end_conditions(self) -> bool:
-        ret_val = False
-        if self.end_cond_func is None:
-            if self.iter_num >= self.end_cond_val:
-                ret_val = True
-        elif self.end_cond_func([self.point], [self.new_point]) <= self.end_cond_val:
-            ret_val = True
-
-        return ret_val
+        return helpers.check_end_conditions(self.end_cond_func, self.end_cond_val,
+                                            [self.point], [self.new_point],
+                                            self.iter_num)
 
 
     def get_cur_iterate(self):

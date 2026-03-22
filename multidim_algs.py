@@ -1,4 +1,6 @@
 import sympy
+
+import helpers
 from numerical_optimization_method import NumericalOptimizationMethod
 from abc import ABC
 import step_size_algorithms
@@ -42,16 +44,11 @@ class MultiDimAlg(NumericalOptimizationMethod, ABC):
         self.end_cond_func, self.end_cond_val = end_conditions
 
 
-    # TODO: this is very hard to read, when I add more end conditions maybe there's a way to fix this
-    def check_end_conditions(self) -> bool:
-        ret_val = False
-        if self.end_cond_func is None:
-            if self.iter_num >= self.end_cond_val:
-                ret_val = True
-        elif self.end_cond_func(self.point.flat(), self.new_point.flat()) <= self.end_cond_val:
-            ret_val = True
 
-        return ret_val
+    def check_end_conditions(self) -> bool:
+        return helpers.check_end_conditions(self.end_cond_func, self.end_cond_val,
+                                            self.point.flat(), self.new_point.flat(),
+                                            self.iter_num)
 
 
     def get_cur_iterate(self):
