@@ -5,7 +5,9 @@ import dim_one_algs
 import multidim_algs
 import sys
 import helpers
-from typing import Callable
+
+import matplotlib.pyplot as plt
+import numpy as np
 
 
 # TODO: a bit repetitive in here, maybe can consolidate
@@ -112,6 +114,8 @@ def main():
 
     #TODO: need a better way to print because the output is ugly rn - perhaps build it into classes
     print(f"\nApproximate optimal solution: {method_obj.run_method()}")
+
+    method_obj.plot_func_vs_iter()
 
 
     ''' end main function'''

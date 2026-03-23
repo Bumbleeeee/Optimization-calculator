@@ -2,12 +2,12 @@ import sympy
 from abc import ABC
 from numerical_optimization_method import NumericalOptimizationMethod
 import helpers
-from typing import Callable
+from typing import Callable, List
 
 x = sympy.symbols('x')
 PHI = (3-sympy.sqrt(5)) / 2
 
-def get_range() -> list:
+def get_range() -> List[float]:
     a = helpers.input_multi_float("Enter the left end of the search interval: ")[0]
     b = helpers.input_multi_float("Enter the right end of the search interval: ")[0]
 
@@ -65,12 +65,12 @@ def fibonacci_search(f, a, b, num_iters=10, epsilon=0.05):
 
 
 class DimOneAlg(NumericalOptimizationMethod, ABC):
-    interval: list = None
-    new_interval: list
+    interval: List[float] = None
+    new_interval: List[float] # stores most recently calculated interval
     end_cond_func: Callable = None # TODO: not really a fan of this but i guess it works
     end_cond_val: float
 
-    def __init__(self, function, start_interval):
+    def __init__(self, function, start_interval: List[float]):
         super().__init__(function)
         self.new_interval = start_interval
 
@@ -85,11 +85,18 @@ class DimOneAlg(NumericalOptimizationMethod, ABC):
     def get_cur_iterate(self):
         return self.new_interval
 
+    def store_current_iterate(self) -> None:
+        midpoint = (self.new_interval[0] + self.new_interval[1]) / 2
+        self.previous_iterates.append([midpoint])
+
+    def get_variables(self) -> tuple:
+        return sympy.symbols('x', seq=True)
+
 
 
 class GoldenSectionSearch(DimOneAlg):
 
-    def __init__(self, function, start_interval, end_conditions):
+    def __init__(self, function, start_interval: List[float], end_conditions):
         super().__init__(function, start_interval)
         self.end_cond_func, self.end_cond_val = end_conditions
 
@@ -115,7 +122,7 @@ class GoldenSectionSearch(DimOneAlg):
 
 class BisectionSearch(DimOneAlg):
 
-    def __init__(self, function, start_interval, end_conditions):
+    def __init__(self, function, start_interval: List[float], end_conditions):
         super().__init__(function, start_interval)
         self.end_cond_func, self.end_cond_val = end_conditions
 
@@ -146,7 +153,7 @@ class FibonacciSearch(DimOneAlg):
     # TODO: what about number of iterations - given that this is a necessity for the method
     fib_numbers: list
 
-    def __init__(self, function, start_interval, num_iters, epsilon):
+    def __init__(self, function, start_interval: List[float], num_iters, epsilon):
         super().__init__(function, start_interval)
         # figure out number of iters then precompute fib numbers
         self.end_cond_val: int = num_iters

@@ -36,11 +36,11 @@ class MultiDimAlg(NumericalOptimizationMethod, ABC):
     point: sympy.Matrix = None
     new_point: sympy.Matrix # this stores the most recently calculated iterate
 
-    def __init__(self, function, step_size_func, start_point, end_conditions):
+    def __init__(self, function, step_size_func, start_point: sympy.Matrix, end_conditions):
         super().__init__(function)
         self.step_size_func = step_size_func
         self.new_point = start_point
-        self.symbols_list = self.create_symbols()
+        self.symbols: tuple = self.create_symbols()
         self.end_cond_func, self.end_cond_val = end_conditions
 
 
@@ -54,12 +54,18 @@ class MultiDimAlg(NumericalOptimizationMethod, ABC):
     def get_cur_iterate(self):
         return self.new_point
 
+    def store_current_iterate(self) -> None:
+        self.previous_iterates.append(self.new_point.flat())
+
+    def get_variables(self) -> tuple:
+        return self.symbols
+
 
     # TODO: not really a good place for this, but works for now
     # creates symbols x_1, ..., x_n to standardize the symbols used
-    def create_symbols(self):
-        var_string = " ".join(f"x_{i + 1}" for i in range(self.new_point.__len__()))
-        x_symbols = sympy.symbols(var_string, seq=True)
+    def create_symbols(self) -> tuple:
+        var_string = " ".join(f"x_{i+1}" for i in range(self.new_point.__len__()))
+        x_symbols = sympy.symbols(var_string, seq=True) # tuple
 
         # replace x,y,z with x_1, x_2, x_3 if present
         xyz_list = [x, y, z]
@@ -72,7 +78,7 @@ class MultiDimAlg(NumericalOptimizationMethod, ABC):
 
 class GradientMethod(MultiDimAlg):
 
-    def __init__(self, function, step_size_func, start_point, end_conditions):
+    def __init__(self, function, step_size_func, start_point: sympy.Matrix, end_conditions):
         super().__init__(function, step_size_func, start_point, end_conditions)
 
 
@@ -80,7 +86,8 @@ class GradientMethod(MultiDimAlg):
     def method_iteration(self):
         self.point = self.new_point
 
-        variables = sympy.Matrix(self.symbols_list)
+        # TODO: doing this every time is a waste
+        variables = self.symbols
         subs_dict = {}
         for i in range(len(variables)):
             subs_dict[variables[i]] = self.point[i]

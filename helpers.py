@@ -1,6 +1,7 @@
 import sympy
 from typing import Tuple, Union, Callable, List
 import helpers
+import matplotlib.pyplot as plt
 
 
 def euclidian_distance(x: list, y: list):
@@ -28,7 +29,7 @@ def get_end_condition() -> Tuple[Callable, Union[int, float]]:
 
     # get type of end condition
     while True:
-        ec_type: str = input("Enter the number of the error type: ")
+        ec_type: str = input("Enter the number of the error type: ").strip()
         if ec_type not in end_conditions_dict.keys():
             print("\nPlease enter a valid integer\n")
         else:
@@ -85,7 +86,16 @@ def input_multi_float(prompt = "Enter a starting point: ") -> List[float]:
             print("Please only enter real numbers.")
 
 
-            #"Enter a starting point. For multiple dimensions, separate with a space: "
 
+def draw(x_points, y_points, linear_thresh = 1e-5) -> None:
+    # here instead of a member function so all plots are the same style
+    plt.plot(x_points, y_points, "r.")
 
+    plt.xlabel("Iteration")
+    plt.ylabel("Optimal Value Approximation")
 
+    plt.yscale("symlog", linthresh = linear_thresh)
+    # TODO: want a better scale, maybe symlog but expanded most around the final iterate to get the most detail
+
+    plt.grid()
+    plt.show()
