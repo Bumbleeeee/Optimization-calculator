@@ -1,7 +1,10 @@
 import sympy
 from typing import Tuple, Union, Callable, List
 import helpers
+import matplotlib as mpl
 import matplotlib.pyplot as plt
+import numpy as np
+from axis_scales import CenteredSymLogScale
 
 
 def euclidian_distance(x: list, y: list):
@@ -87,15 +90,38 @@ def input_multi_float(prompt = "Enter a starting point: ") -> List[float]:
 
 
 
-def draw(x_points, y_points, linear_thresh = 1e-5) -> None:
+def draw(x_points, y_points, center = 0, linear_thresh = 1e-5) -> None:
     # here instead of a member function so all plots are the same style
-    plt.plot(x_points, y_points, "r.")
 
-    plt.xlabel("Iteration")
-    plt.ylabel("Optimal Value Approximation")
+    if linear_thresh <= 0: linear_thresh = 1e-5
+    mpl.scale.register_scale(CenteredSymLogScale)
 
-    plt.yscale("symlog", linthresh = linear_thresh)
-    # TODO: want a better scale, maybe symlog but expanded most around the final iterate to get the most detail
+    fig, ax = plt.subplots(3)
+    fig.suptitle("Optimal Value approximation vs. Iteration")
+    fig.set_figheight(6)
 
-    plt.grid()
+    ax[0].plot(x_points, y_points, "r.")
+    #ax[0].set_xlabel("Iteration")
+    ax[0].set_ylabel("Linear scale")
+
+    ax[0].set_yscale("linear")
+    ax[0].xaxis.set_major_locator(mpl.ticker.MaxNLocator(integer=True))
+    ax[0].grid(True)
+
+    ax[1].plot(x_points, y_points, "r.")
+    #ax[1].set_xlabel("Iteration")
+    ax[1].set_ylabel("Symlog scale")
+
+    ax[1].set_yscale("symlog", linthresh = linear_thresh)
+    ax[1].xaxis.set_major_locator(mpl.ticker.MaxNLocator(integer=True))
+    ax[1].grid(True)
+
+    ax[2].plot(x_points, y_points, "r.")
+    #ax[2].set_xlabel("Iteration")
+    ax[2].set_ylabel("Centered Symlog scale")
+
+    ax[2].set_yscale("centered_symlog", center=center - linear_thresh, linthresh = linear_thresh)
+    ax[2].xaxis.set_major_locator(mpl.ticker.MaxNLocator(integer=True))
+    ax[2].grid(True)
+
     plt.show()

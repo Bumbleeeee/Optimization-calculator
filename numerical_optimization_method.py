@@ -59,14 +59,25 @@ class NumericalOptimizationMethod(ABC):
 
         x_vals = list(range(len(self.previous_iterates))) #start at 0 b/c plotting user-inputted start point
         y_vals = []
-        min_abs_f = 1e-5 # linear threshold for symlog axis scale
+        mins_set = False # linear threshold for symlog axis scale
+        min_abs_f = 1
+        min_f = 1
 
         for point in self.previous_iterates:
             # convert to numpy array of floats otherwise doesn't work with the numpy trig
             f_x = lambda_f(*np.array(point).astype(float))
             y_vals.append(f_x)
-            min_abs_f = min(min_abs_f, abs(f_x))
 
-        helpers.draw(x_vals, y_vals, min_abs_f)
+            # get min value for symlog linear range
+            if not mins_set:
+                min_abs_f = abs(f_x)
+                min_f = f_x
+                mins_set = True
+            else:
+                min_abs_f = min(min_abs_f, abs(f_x))
+                min_f = min(min_f, f_x)
+            print(min_f)
+
+        helpers.draw(x_vals, y_vals, min_f, min_abs_f)
 
 
