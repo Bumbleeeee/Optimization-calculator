@@ -7,11 +7,37 @@ will do the rest.
 
 ### Installation
 
-More information coming soon!
+Clone the repository
+```
+https://github.com/Bumbleeeee/Optimization-calculator.git
+```
+```
+cd Optimization-calculator
+```
 
-Run the following line to install the required packages:
+Create virtual environment
 
-     pip install -r requirements.txt 
+     python -m venv venv
+
+Activate virtual environment
+
+On MacOS/Linux:
+
+     source venv/bin/activate
+
+On Windows:
+
+     .\venv\Scripts\activate
+
+Install requirements
+
+     pip install -r requirements.txt
+
+Run the program
+
+     python main.py
+
+- Note: if you wish to explicitly use python3, replace 'python' with 'python3' where it appears above
 
 
 ### Important input information
