@@ -4,6 +4,7 @@ import helpers
 from numerical_optimization_method import NumericalOptimizationMethod
 from abc import ABC
 import step_size_algorithms
+from typing import List
 
 x, y, z = sympy.symbols('x y z')
 # note the use of point-direction-stepsize so individual iterations should probably handle the step size
@@ -51,8 +52,8 @@ class MultiDimAlg(NumericalOptimizationMethod, ABC):
                                             self.iter_num)
 
 
-    def get_cur_iterate(self):
-        return self.new_point
+    def get_cur_iterate(self) -> List[float]:
+        return self.new_point.flat()
 
     def store_current_iterate(self) -> None:
         self.previous_iterates.append(self.new_point.flat())

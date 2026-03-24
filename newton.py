@@ -3,6 +3,7 @@ from abc import ABC
 from numerical_optimization_method import NumericalOptimizationMethod
 import sys
 import helpers
+from typing import List
 
 x = sympy.symbols('x') #TODO: this needs to change
 
@@ -24,8 +25,8 @@ class NewtonAlg(NumericalOptimizationMethod, ABC):
                                             self.iter_num)
 
 
-    def get_cur_iterate(self):
-        return self.new_point
+    def get_cur_iterate(self) -> List[float]:
+        return [self.new_point]
 
     def store_current_iterate(self) -> None:
         self.previous_iterates.append([self.new_point])

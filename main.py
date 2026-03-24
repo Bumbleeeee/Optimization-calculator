@@ -113,7 +113,9 @@ def main():
     method_obj = OPT_CONFIG[method_name]["class"](**args_dict)
 
     #TODO: need a better way to print because the output is ugly rn - perhaps build it into classes
-    print(f"\nApproximate optimal solution: {method_obj.run_method()}")
+    #print(f"\nApproximate optimal solution: {method_obj.run_method()}")
+    method_obj.run_method()
+    method_obj.print_result()
 
     method_obj.plot_func_vs_iter()
 

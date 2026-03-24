@@ -40,7 +40,7 @@ class NumericalOptimizationMethod(ABC):
     # return current point (numerical approximation of optimal value)
     # TODO: what if we are dealing with intervals i.e. one dimensional algorithms
     @abstractmethod
-    def get_cur_iterate(self):
+    def get_cur_iterate(self) -> List[float]:
         pass
 
     @abstractmethod
@@ -76,8 +76,19 @@ class NumericalOptimizationMethod(ABC):
             else:
                 min_abs_f = min(min_abs_f, abs(f_x))
                 min_f = min(min_f, f_x)
-            print(min_f)
 
         helpers.draw(x_vals, y_vals, min_f, min_abs_f)
+
+
+    def print_result(self):
+        point = self.get_cur_iterate()
+        print(f"\nApproximate optimal solution: {point}")
+
+        var_tuple = self.get_variables()
+        subs_dict = {}
+        for i in range(len(point)):
+            subs_dict[var_tuple[i]] = point[i]
+
+        print(f"Approximate optimal value: {self.expression.evalf(subs=subs_dict)}")
 
 

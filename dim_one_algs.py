@@ -4,7 +4,7 @@ from numerical_optimization_method import NumericalOptimizationMethod
 import helpers
 from typing import Callable, List
 
-x = sympy.symbols('x')
+x = sympy.symbols('x') #TODO: can remove this but have to change all explicit substitutions
 PHI = (3-sympy.sqrt(5)) / 2
 
 def get_range() -> List[float]:
@@ -82,8 +82,8 @@ class DimOneAlg(NumericalOptimizationMethod, ABC):
                                             self.iter_num)
 
 
-    def get_cur_iterate(self):
-        return self.new_interval
+    def get_cur_iterate(self) -> List[float]:
+        return list(self.new_interval)
 
     def store_current_iterate(self) -> None:
         midpoint = (self.new_interval[0] + self.new_interval[1]) / 2
@@ -91,6 +91,13 @@ class DimOneAlg(NumericalOptimizationMethod, ABC):
 
     def get_variables(self) -> tuple:
         return sympy.symbols('x', seq=True)
+
+    # override
+    def print_result(self):
+        print(f"\nInterval containing optimal solution: {self.new_interval}")
+
+        midpoint = (self.new_interval[0] + self.new_interval[1]) / 2
+        print(f"Midpoint approximate optimal value: {self.expression.evalf(subs={x: midpoint})}")
 
 
 
