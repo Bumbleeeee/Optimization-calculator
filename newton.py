@@ -4,7 +4,7 @@ from numerical_optimization_method import NumericalOptimizationMethod
 import sys
 import helpers
 
-x = sympy.symbols('x')
+x = sympy.symbols('x') #TODO: this needs to change
 
 
 # TODO: this whole class of algs could really be a subset of something else, but fine for now
@@ -12,7 +12,7 @@ class NewtonAlg(NumericalOptimizationMethod, ABC):
     point: float = None
     new_point: float  # this stores the most recently calculated iterate
 
-    def __init__(self, function, start_point, end_conditions):
+    def __init__(self, function, start_point: float, end_conditions):
         super().__init__(function)
         self.new_point = start_point
         self.end_cond_func, self.end_cond_val = end_conditions
@@ -27,11 +27,17 @@ class NewtonAlg(NumericalOptimizationMethod, ABC):
     def get_cur_iterate(self):
         return self.new_point
 
+    def store_current_iterate(self) -> None:
+        self.previous_iterates.append([self.new_point])
+
+    def get_variables(self) -> tuple:
+        return sympy.symbols('x', seq=True)
+
 
 
 class NewtonOptimizationMethod(NewtonAlg):
 
-    def __init__(self, function, start_point, end_conditions):
+    def __init__(self, function, start_point: float, end_conditions):
         super().__init__(function, start_point, end_conditions)
 
 
@@ -53,7 +59,7 @@ class NewtonOptimizationMethod(NewtonAlg):
 
 class NewtonRootFindingMethod(NewtonAlg):
 
-    def __init__(self, function, start_point, end_conditions):
+    def __init__(self, function, start_point: float, end_conditions):
         super().__init__(function, start_point, end_conditions)
 
 
