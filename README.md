@@ -5,8 +5,6 @@ will do the rest.
 
 ## For more frequent updates on the state of the project, check the announcements in the discussions tab
 
-- NOTE: optimal step size is not currently functional 
-
 ### Installation
 
 More information coming soon!
