@@ -23,12 +23,12 @@ def get_num_iters():
         except ValueError:
             print("Invalid input, please enter an integer")
 
-
     return a
+
 
 def get_epsilon():
     while True:
-        a = helpers.input_multi_float("Enter a value for epsilon. If unsure, use 0.05: ")[0]
+        a = helpers.input_multi_float("Enter a value for epsilon in [0, 0.5]. If unsure, use 0.05: ")[0]
         if 0 <= a <= 0.5: break
         print("Invalid input, please enter a number in the interval [0, 0.5]")
     return a
@@ -156,15 +156,14 @@ class BisectionSearch(DimOneAlg):
 
 
 class FibonacciSearch(DimOneAlg):
-    # TODO: should the user be able to choose epsilon?
-    # TODO: what about number of iterations - given that this is a necessity for the method
+
     fib_numbers: list
 
     def __init__(self, function, start_interval: List[float], num_iters, epsilon):
         super().__init__(function, start_interval)
         # figure out number of iters then precompute fib numbers
         self.end_cond_val: int = num_iters
-        self.compute_fib_nums()
+        self.fib_numbers = helpers.compute_fib_nums(num_iters + 2)
         self.epsilon = epsilon
 
 
@@ -188,14 +187,4 @@ class FibonacciSearch(DimOneAlg):
             self.new_interval = a1, b
         else:
             self.new_interval = a, b1
-
-
-    def compute_fib_nums(self):
-        num_iters = self.end_cond_val
-
-        fib_numbers = [1, 1]  # fibNumbers[i] = ith fibonacci number
-        for i in range(2, num_iters + 2):
-            fib_numbers.append(fib_numbers[i - 1] + fib_numbers[i - 2])
-
-        self.fib_numbers = fib_numbers
 

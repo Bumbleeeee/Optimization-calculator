@@ -6,8 +6,6 @@ import multidim_algs
 import sys
 import helpers
 
-import matplotlib.pyplot as plt
-import numpy as np
 
 
 # TODO: a bit repetitive in here, maybe can consolidate

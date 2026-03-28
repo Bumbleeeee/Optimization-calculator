@@ -1,10 +1,11 @@
 import sympy
 
 import helpers
+from helpers import compute_gradient
 from numerical_optimization_method import NumericalOptimizationMethod
 from abc import ABC
 import step_size_algorithms
-from typing import List
+from typing import List, Tuple
 
 x, y, z = sympy.symbols('x y z')
 # note the use of point-direction-stepsize so individual iterations should probably handle the step size
@@ -41,7 +42,7 @@ class MultiDimAlg(NumericalOptimizationMethod, ABC):
         super().__init__(function)
         self.step_size_func = step_size_func
         self.new_point = start_point
-        self.symbols: tuple = self.create_symbols()
+        self.symbols: Tuple[sympy.Symbol] = self.create_symbols()
         self.end_cond_func, self.end_cond_val = end_conditions
 
 
@@ -64,7 +65,7 @@ class MultiDimAlg(NumericalOptimizationMethod, ABC):
 
     # TODO: not really a good place for this, but works for now
     # creates symbols x_1, ..., x_n to standardize the symbols used
-    def create_symbols(self) -> tuple:
+    def create_symbols(self) -> Tuple[sympy.Symbol]:
         var_string = " ".join(f"x_{i+1}" for i in range(self.new_point.__len__()))
         x_symbols = sympy.symbols(var_string, seq=True) # tuple
 
@@ -93,7 +94,7 @@ class GradientMethod(MultiDimAlg):
         for i in range(len(variables)):
             subs_dict[variables[i]] = self.point[i]
 
-        gradient = sympy.Matrix([self.expression]).jacobian(variables).T
+        gradient = compute_gradient(self.expression, variables)
 
         # handle different step size methods
         if self.step_size_func == sympy.oo:
