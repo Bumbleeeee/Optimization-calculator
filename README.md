@@ -61,3 +61,5 @@ requirement that the function is strictly unimodal on the provided interval. Che
 
 - For maximization, enter the negative of the function you wish to maximize as each algorithm currently only handles 
 minimization
+
+- Constants such as e and pi, are NOT currently supported outside of when you input the function. When inputting e, you can use 'e', 'E', or 'exp([exponent])'
