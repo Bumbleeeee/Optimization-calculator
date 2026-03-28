@@ -4,7 +4,7 @@ import sympy
 import helpers
 import numpy as np
 
-MAX_ITERS = 1000 # to avoid infinite loop when an algo is run with initial conditions that don't converge
+MAX_ITERS = 200 # to avoid infinite loop when an algo is run with initial conditions that don't converge
 
 class NumericalOptimizationMethod(ABC):
 

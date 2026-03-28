@@ -1,12 +1,15 @@
 import sympy as sy
 from typing import Callable
-MAX_STEPSIZE_ITERS = 1000
+from helpers import compute_gradient
+MAX_STEPSIZE_ITERS = 100
+import time
+
 
 def armijo_backtracking_alg(func, point, var_list: tuple, alpha = 1.0, decrement = 0.75):
     # Armijo Backtracking algorithm (guaranteed to terminate for continuously differentiable functions)
 
     f_lambda = sy.lambdify(var_list, func, modules=["sympy"])
-    gradient = sy.Matrix([func]).jacobian(var_list).T
+    gradient = compute_gradient(func, var_list)
     grad_lambda = sy.lambdify(var_list, gradient, modules=["sympy"])
     neg_grad_dir = -1 * grad_lambda(*point)
 
@@ -27,7 +30,8 @@ def check_armijo_condition(func: Callable, gradient: Callable, cur_point: sy.Mat
     g_x = gradient(*cur_point)
 
     step = c_1 * step_length * search_direction.T @ g_x # '@' does matrix mult
-    step_float = sy.Float(step[0, 0]) #TODO: might break when I add support for pi and other constants b/c I think they need to be evaluated to become sy.Float type
+    # 1x1 matrix so just take top element to get a float
+    step_float = sy.Float(step[0,0].evalf()) #TODO: might break when I add support for pi and other constants b/c I think they need to be evaluated to become sy.Float type
 
     return f_xap <= f_x + step_float
 

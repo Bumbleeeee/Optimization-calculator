@@ -6,6 +6,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 from axis_scales import CenteredSymLogScale
 
+locals_map = {'e': sympy.E}
+
 
 def euclidian_distance(x: list, y: list):
 
@@ -73,7 +75,7 @@ def get_func_to_optimize():
                  "\n- For functions from R to R, use 'x' as the variable. "
                  "For functions from R^n to R, use 'x_1',...,'x_n' or x, y, z. "
                  "\n- Please use '*' explicitly for all multiplication.\n")
-    return sympy.sympify(expr)
+    return sympy.sympify(expr, locals=locals_map)
 
 
 def input_multi_float(prompt = "Enter a starting point: ") -> List[float]:
@@ -125,3 +127,21 @@ def draw(x_points, y_points, center = 0, linear_thresh = 1e-5) -> None:
     ax[2].grid(True)
 
     plt.show()
+
+
+
+def compute_gradient(function: sympy.Function, variables: Tuple[sympy.Symbol]) -> sympy.Matrix:
+    # gradient is Nx1 matrix (symbolic)
+    return sympy.Matrix([function]).jacobian(variables).T
+
+
+def compute_fib_nums(num: int) -> List[int]:
+    if num < 0: num = 0
+    fib_numbers = [1, 1]  # fibNumbers[i] = ith fibonacci number
+
+    if num < 2: return fib_numbers[:num]
+
+    for i in range(2, num):
+        fib_numbers.append(fib_numbers[i - 1] + fib_numbers[i - 2])
+
+    return fib_numbers
