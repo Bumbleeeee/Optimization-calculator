@@ -98,7 +98,7 @@ class GradientMethod(MultiDimAlg):
 
         # handle different step size methods
         if self.step_size_func == sympy.oo:
-            step_size_num = step_size_algorithms.armijo_backtracking_alg(self.expression, self.point, variables)
+            step_size_num = step_size_algorithms.armijo_wolfe_alg(self.expression, self.point, variables)
         else:
             step_size_num = self.step_size_func.evalf(subs={x: self.iter_num})
 
