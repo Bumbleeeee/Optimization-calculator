@@ -5,7 +5,7 @@ from typing import List
 
 class Function:
 
-    def __init__(self, name: str, f, start_points: List[List[float]], x_opt: tuple = None, variables: tuple = (x, y, z)):
+    def __init__(self, name: str, f, start_points: List[List[float]] = None, x_opt: tuple = None, variables: tuple = (x, y, z)):
         self.f = f
         self.grad = sy.Matrix([f]).jacobian(variables).T
         self.x_opt = x_opt
