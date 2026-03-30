@@ -29,7 +29,7 @@ On Windows:
 
      .\venv\Scripts\activate
 
-Install requirements
+Install requirements<sup>1</sup>
 
      pip install -r requirements.txt
 
@@ -38,6 +38,8 @@ Run the program
      python main.py
 
 - Note: if you wish to explicitly use python3, replace 'python' with 'python3' where it appears above
+
+<sup>1</sup>: if you are a developer and wish to run tests, run this with 'requirements-dev.txt' instead
 
 
 ### Important input information
