@@ -7,7 +7,7 @@ import functions.onedim as fo
 from hypothesis import given, strategies as st, settings
 
 END_CONDITIONS = [
-    (None, 200), # fixed number of iterations
+    (None, 150), # fixed number of iterations
     (helpers.euclidian_distance, 1e-6) # max distance between successive iterates
 ]
 
